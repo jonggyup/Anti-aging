@@ -1278,6 +1278,11 @@ got_it:
 		 * This page will go to BIO.  Do we need to send this
 		 * BIO off first?
 		 */
+
+		/* Detecting fragmentation of bios.
+		 * Split bios due to fragmentation.
+		 */
+
 		if (bio && (last_block_in_bio != block_nr - 1 ||
 			!__same_bdev(F2FS_I_SB(inode), block_nr, bio))) {
 submit_and_realloc:
