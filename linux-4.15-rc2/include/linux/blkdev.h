@@ -239,6 +239,11 @@ struct request {
 
 	/* for bidi */
 	struct request *next_rq;
+
+	/* Added by Jonggyu
+	 * for checking fragmentation 
+	 */
+	bool fragmented = false;
 };
 
 static inline bool blk_rq_is_scsi(struct request *rq)

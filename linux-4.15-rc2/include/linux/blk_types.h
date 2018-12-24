@@ -117,6 +117,7 @@ struct bio {
 	 * MUST obviously be kept at the very end of the bio.
 	 */
 	struct bio_vec		bi_inline_vecs[0];
+	bool fragmented=false;
 };
 
 #define BIO_RESET_BYTES		offsetof(struct bio, bi_max_vecs)

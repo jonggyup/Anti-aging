@@ -1281,10 +1281,19 @@ got_it:
 
 		/* Detecting fragmentation of bios.
 		 * Split bios due to fragmentation.
+		 * Added by Jonggyu.
 		 */
 
+		/* Original version
+		 * 
 		if (bio && (last_block_in_bio != block_nr - 1 ||
 			!__same_bdev(F2FS_I_SB(inode), block_nr, bio))) {
+		*/
+		if (bio && last_block_in_bio != block_nr -1){
+				bio -> fragmetend = true;
+		}
+
+		if (bio && !__same_bdev(F2FS_I_SB(inode), block_nr, bio)) {
 submit_and_realloc:
 			__submit_bio(F2FS_I_SB(inode), bio, DATA);
 			bio = NULL;

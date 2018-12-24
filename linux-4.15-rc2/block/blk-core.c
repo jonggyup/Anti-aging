@@ -1424,6 +1424,13 @@ retry:
 	if (!IS_ERR(rq))
 		return rq;
 
+	/* Added by Jonggyu
+	 * if a bio is fragmented, mark the request as fragmented.
+	 */
+	if (bio->fragmented)
+			rq->fragmented = true;
+	
+
 	if (op & REQ_NOWAIT) {
 		blk_put_rl(rl);
 		return ERR_PTR(-EAGAIN);
