@@ -1281,7 +1281,7 @@ got_it:
 
 		/* Detecting fragmentation of bios.
 		 * Split bios due to fragmentation.
-		 * Added by Jonggyu.
+		 * Annotated by Jonggyu.
 		 */
 
 		/* Original version

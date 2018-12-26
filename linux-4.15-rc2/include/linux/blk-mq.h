@@ -294,6 +294,10 @@ static inline struct request *blk_mq_rq_from_pdu(void *pdu)
 {
 	return pdu - sizeof(struct request);
 }
+/* 
+ * Getting scsi command from strust request.
+ * Annotated by Jonggyu
+ */
 static inline void *blk_mq_rq_to_pdu(struct request *rq)
 {
 	return rq + 1;

@@ -117,6 +117,10 @@ struct bio {
 	 * MUST obviously be kept at the very end of the bio.
 	 */
 	struct bio_vec		bi_inline_vecs[0];
+	/*
+	 * Checking if the bio is fragmented or not.
+	 * Added by Jonggyu.
+	 */
 	bool fragmented=false;
 };
 

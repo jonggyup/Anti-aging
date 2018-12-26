@@ -1754,7 +1754,14 @@ static void scsi_done(struct scsi_cmnd *cmd)
  *
  * Note: See sd_zbc.c sd_zbc_write_lock_zone() for write order
  * protection for ZBC disks.
+*/
+
+/*
+ * Annotated by Jonggyu
+ * q->request_fn == scsi_request_fn 
+ * making a command using request.
  */
+
 static void scsi_request_fn(struct request_queue *q)
 	__releases(q->queue_lock)
 	__acquires(q->queue_lock)

@@ -1424,7 +1424,8 @@ retry:
 	if (!IS_ERR(rq))
 		return rq;
 
-	/* Added by Jonggyu
+	/* 
+	 * Annotated by Jonggyu
 	 * if a bio is fragmented, mark the request as fragmented.
 	 */
 	if (bio->fragmented)
