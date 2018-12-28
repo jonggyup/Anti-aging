@@ -212,6 +212,12 @@ static void scsi_unlock_floptical(struct scsi_device *sdev,
  * Return value:
  *     scsi_Device pointer, or NULL on failure.
  **/
+
+/* allocating and setup a scsi_device at first.
+ * Setting up request queue to scsi queue 
+ * mapping functions including q->pref_rq_fn
+ * Annotated by Jonggyu
+ */
 static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
 					   u64 lun, void *hostdata)
 {
@@ -269,6 +275,10 @@ static struct scsi_device *scsi_alloc_sdev(struct scsi_target *starget,
 	if (shost_use_blk_mq(shost))
 		sdev->request_queue = scsi_mq_alloc_queue(sdev);
 	else
+		/* 
+		 * setting request_queue to scsi_queue
+		 * Annotated by Jonggyu
+		 */
 		sdev->request_queue = scsi_old_alloc_queue(sdev);
 	if (!sdev->request_queue) {
 		/* release fn is set up in scsi_sysfs_device_initialise, so

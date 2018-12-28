@@ -1352,6 +1352,13 @@ scsi_prep_return(struct request_queue *q, struct request *req, int ret)
 	return ret;
 }
 
+/*
+ * Annotated by Jonggyu
+ *
+ * mapping req->special to cmd,
+ * Setting up scsi cmd using request.
+ * It is called by blk_peek_request.
+ */
 static int scsi_prep_fn(struct request_queue *q, struct request *req)
 {
 	struct scsi_device *sdev = q->queuedata;
@@ -1757,9 +1764,9 @@ static void scsi_done(struct scsi_cmnd *cmd)
 */
 
 /*
- * Annotated by Jonggyu
- * q->request_fn == scsi_request_fn 
+ * q->request_fn is directed to scsi_request_fn 
  * making a command using request.
+ * Annotated by Jonggyu
  */
 
 static void scsi_request_fn(struct request_queue *q)
@@ -2203,7 +2210,9 @@ static void scsi_old_exit_rq(struct request_queue *q, struct request *rq)
 	scsi_free_sense_buffer(cmd->flags & SCMD_UNCHECKED_ISA_DMA,
 			       cmd->sense_buffer);
 }
-
+/* mapping request_queue to scsi_queue in case of single queue (not multi-queue)
+ * Annotated by Jonggyu
+ */
 struct request_queue *scsi_old_alloc_queue(struct scsi_device *sdev)
 {
 	struct Scsi_Host *shost = sdev->host;
@@ -2225,6 +2234,9 @@ struct request_queue *scsi_old_alloc_queue(struct scsi_device *sdev)
 	}
 
 	__scsi_init_queue(shost, q);
+	/* mapping q->pref_rq_fn to scsi_prep_fn()
+	 * Annotated by Jonggyu
+	 */
 	blk_queue_prep_rq(q, scsi_prep_fn);
 	blk_queue_unprep_rq(q, scsi_unprep_fn);
 	blk_queue_softirq_done(q, scsi_softirq_done);

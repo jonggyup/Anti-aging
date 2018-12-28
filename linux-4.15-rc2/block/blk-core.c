@@ -406,6 +406,9 @@ inline void __blk_run_queue_uncond(struct request_queue *q)
 	 * can wait until all these request_fn calls have finished.
 	 */
 	q->request_fn_active++;
+	/* q->request_fn is directed to scsi_request_fn.
+	 * by Jonggyu
+	 */
 	q->request_fn(q);
 	q->request_fn_active--;
 }
@@ -1424,14 +1427,6 @@ retry:
 	if (!IS_ERR(rq))
 		return rq;
 
-	/* 
-	 * Annotated by Jonggyu
-	 * if a bio is fragmented, mark the request as fragmented.
-	 */
-	if (bio->fragmented)
-			rq->fragmented = true;
-	
-
 	if (op & REQ_NOWAIT) {
 		blk_put_rl(rl);
 		return ERR_PTR(-EAGAIN);
@@ -1880,10 +1875,20 @@ void blk_init_request_from_bio(struct request *req, struct bio *bio)
 	else
 		req->ioprio = IOPRIO_PRIO_VALUE(IOPRIO_CLASS_NONE, 0);
 	req->write_hint = bio->bi_write_hint;
+
+	/*
+	 * Initializing a request from a bio
+	 * such as io_len, bi_disk, etc.
+	 * Annotated by Jonggyu
+	 */
 	blk_rq_bio_prep(req->q, req, bio);
 }
 EXPORT_SYMBOL_GPL(blk_init_request_from_bio);
 
+/*
+ * q->make_request_fn is directed to this func.
+ * Annotated by Jonggyu
+ */
 static blk_qc_t blk_queue_bio(struct request_queue *q, struct bio *bio)
 {
 	struct blk_plug *plug;
@@ -1899,6 +1904,11 @@ static blk_qc_t blk_queue_bio(struct request_queue *q, struct bio *bio)
 	 */
 	blk_queue_bounce(q, &bio);
 
+	/*
+	 * If bio_len is bigger than the maxsector,
+	 * split the bio.
+	 * Annoatated by Jonggyu
+	 */
 	blk_queue_split(q, &bio);
 
 	if (!bio_integrity_prep(bio))
@@ -1974,6 +1984,11 @@ get_rq:
 	 * may now be mergeable after it had proven unmergeable (above).
 	 * We don't worry about that case for efficiency. It won't happen
 	 * often, and the elevators are able to handle it.
+	 */
+
+	/*
+	 * Initializing a request from a bio.
+	 * Annoatated by Jonggyu
 	 */
 	blk_init_request_from_bio(req, bio);
 
@@ -2308,6 +2323,11 @@ blk_qc_t generic_make_request(struct bio *bio)
 			/* Create a fresh bio_list for all subordinate requests */
 			bio_list_on_stack[1] = bio_list_on_stack[0];
 			bio_list_init(&bio_list_on_stack[0]);
+			
+			/*
+			 * Connected to blk_queue_bio func.
+			 * Annotated by Jonggyu
+			 */
 			ret = q->make_request_fn(q, bio);
 
 			blk_queue_exit(q);
@@ -2765,7 +2785,7 @@ struct request *blk_peek_request(struct request_queue *q)
 			rq->nr_phys_segments++;
 		}
 
-		if (!q->prep_rq_fn)
+		if (!)
 			break;
 
 		ret = q->prep_rq_fn(q, rq);
