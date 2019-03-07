@@ -402,7 +402,22 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
 	elv_rqhash_del(q, rq);
 
 	q->nr_sorted--;
-
+	/* Added by Jonggyu
+	 
+	iter = rq->bio;
+	if (rq->bio && iter->initialized == true && iter->frag_list != NULL)
+	{
+		printk("break point #1");
+		new_rq = get_request(q, iter->bi_opf, iter, 0);
+		if (IS_ERR(new_rq))
+				printk("get_request func incurred an error");
+		blk_init_request_from_bio(new_rq, iter);
+		printk("break point #2");
+		//elv_dispatch_sort(q, new_rq);
+	}
+	rq = new_rq;*/
+	//--- to this point----
+	
 	boundary = q->end_sector;
 	list_for_each_prev(entry, &q->queue_head) {
 		struct request *pos = list_entry_rq(entry);
@@ -424,7 +439,12 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
 			break;
 	}
 
-	list_add(&rq->queuelist, entry);
+  /* Modified by Jonggyu */
+//  while (rq)
+//  {
+	  list_add(&rq->queuelist, entry);
+//    rq = rq->frag_list;
+//  }
 }
 EXPORT_SYMBOL(elv_dispatch_sort);
 

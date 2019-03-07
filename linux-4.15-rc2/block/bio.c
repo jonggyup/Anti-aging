@@ -283,6 +283,11 @@ void bio_init(struct bio *bio, struct bio_vec *table,
 
 	bio->bi_io_vec = table;
 	bio->bi_max_vecs = max_vecs;
+
+  /* Added by Jonggyu */
+	bio->fragmented = 0;
+	bio->initialized = true;
+  bio->frag_list = NULL;
 }
 EXPORT_SYMBOL(bio_init);
 

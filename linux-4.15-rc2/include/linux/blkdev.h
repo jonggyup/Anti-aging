@@ -240,10 +240,10 @@ struct request {
 	/* for bidi */
 	struct request *next_rq;
 
-	/* Added by Jonggyu
-	 * for checking fragmentation 
-	 */
-	bool fragmented = false;
+  /* Added by Jonggyu */
+  struct request *frag_list;
+  bool fragmented;
+
 };
 
 static inline bool blk_rq_is_scsi(struct request *rq)
@@ -942,6 +942,8 @@ extern void __blk_put_request(struct request_queue *, struct request *);
 extern struct request *blk_get_request_flags(struct request_queue *,
 					     unsigned int op,
 					     blk_mq_req_flags_t flags);
+extern struct request *get_request(struct request_queue *q, unsigned int op, struct bio *bio, 
+				blk_mq_req_flags_t flags);
 extern struct request *blk_get_request(struct request_queue *, unsigned int op,
 				       gfp_t gfp_mask);
 extern void blk_requeue_request(struct request_queue *, struct request *);

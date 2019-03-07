@@ -13,7 +13,6 @@
 #include <linux/init.h>
 #include <linux/compiler.h>
 #include <linux/rbtree.h>
-
 /*
  * See Documentation/block/deadline-iosched.txt
  */
@@ -184,7 +183,48 @@ deadline_merged_requests(struct request_queue *q, struct request *req,
 
 /*
  * move request from sort list to dispatch queue.
- */
+*/
+/*
+static inline void
+deadline_move_to_dispatch(struct deadline_data *dd, struct request *rq)
+{
+	struct request_queue *q = rq->q;
+	struct request *req;
+	struct bio *iter = rq->bio;
+
+	deadline_remove_request(q, rq);
+	if (rq->bio && rq->bio->initialized == true && rq->bio->frag_list != NULL)
+	{*/
+		/*
+		 * Iternate fragmente bios and make the corresponding requests
+		 * Added by Jonggyu
+		 */
+//		while(iter)
+//		{
+/*			printk("While statement1\n");
+//			spin_lock_irq(q->queue_lock);
+			printk("While statement2\n");
+			req = get_request(q, iter->bi_opf, iter, 0);
+			if (IS_ERR(req))
+					printk("get_request incurred an error\n");
+			blk_init_request_from_bio(req, iter);
+			printk("While statement3\n");
+//			spin_unlock_irq(q->queue_lock);
+//			printk("While statement4\n");
+//			iter = iter->frag_list;
+//			printk("While statement5\n");
+			elv_dispatch_add_tail(q, req);
+			printk("While statement6\n");
+//		}
+	}
+	else 
+		elv_dispatch_add_tail(q, rq);
+
+}
+
+*/
+/* Original deadline_move_to_dispatch
+*/
 static inline void
 deadline_move_to_dispatch(struct deadline_data *dd, struct request *rq)
 {
@@ -193,6 +233,7 @@ deadline_move_to_dispatch(struct deadline_data *dd, struct request *rq)
 	deadline_remove_request(q, rq);
 	elv_dispatch_add_tail(q, rq);
 }
+
 
 /*
  * move an entry to dispatch queue

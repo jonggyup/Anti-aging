@@ -121,7 +121,9 @@ struct bio {
 	 * Checking if the bio is fragmented or not.
 	 * Added by Jonggyu.
 	 */
-	bool fragmented=false;
+	int fragmented;
+  struct bio *frag_list;
+	bool initialized;
 };
 
 #define BIO_RESET_BYTES		offsetof(struct bio, bi_max_vecs)

@@ -1208,6 +1208,8 @@ static int f2fs_mpage_readpages(struct address_space *mapping,
 	sector_t last_block_in_file;
 	sector_t block_nr;
 	struct f2fs_map_blocks map;
+	struct bio *prev = NULL;
+	bool fragmented = false;
 
 	map.m_pblk = 0;
 	map.m_lblk = 0;
@@ -1290,20 +1292,30 @@ got_it:
 			!__same_bdev(F2FS_I_SB(inode), block_nr, bio))) {
 		*/
 		if (bio && last_block_in_bio != block_nr -1){
-				bio -> fragmetend = true;
+			bio->fragmented = 100;
+			fragmented = true;
+			prev = bio;
+			bio = NULL;
 		}
 
 		if (bio && !__same_bdev(F2FS_I_SB(inode), block_nr, bio)) {
 submit_and_realloc:
+			if (fragmented == true)
+							bio->fragmented = 100;
 			__submit_bio(F2FS_I_SB(inode), bio, DATA);
 			bio = NULL;
+			prev = NULL;
+			fragmented = false;
 		}
 		if (bio == NULL) {
 			bio = f2fs_grab_read_bio(inode, block_nr, nr_pages);
 			if (IS_ERR(bio)) {
 				bio = NULL;
+				prev = NULL;
+				fragmented = false;
 				goto set_error_page;
 			}
+			bio->frag_list = prev;
 		}
 
 		if (bio_add_page(bio, page, blocksize, 0) < blocksize)
@@ -1318,8 +1330,12 @@ set_error_page:
 		goto next_page;
 confused:
 		if (bio) {
+			if (fragmented == true)
+							bio->fragmented = 100;
 			__submit_bio(F2FS_I_SB(inode), bio, DATA);
 			bio = NULL;
+			prev = NULL;
+			fragmented = false;
 		}
 		unlock_page(page);
 next_page:
@@ -1327,8 +1343,13 @@ next_page:
 			put_page(page);
 	}
 	BUG_ON(pages && !list_empty(pages));
-	if (bio)
+	if (bio){
+		prev = NULL;
+		fragmented = false;
+			if (fragmented == true)
+							bio->fragmented = 100;
 		__submit_bio(F2FS_I_SB(inode), bio, DATA);
+  }
 	return 0;
 }
 

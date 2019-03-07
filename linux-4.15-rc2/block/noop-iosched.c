@@ -22,11 +22,27 @@ static int noop_dispatch(struct request_queue *q, int force)
 {
 	struct noop_data *nd = q->elevator->elevator_data;
 	struct request *rq;
+	struct request *iter;
 
 	rq = list_first_entry_or_null(&nd->queue, struct request, queuelist);
 	if (rq) {
 		list_del_init(&rq->queuelist);
-		elv_dispatch_sort(q, rq);
+/*		iter = rq->bio;
+		if (rq->bio && iter->initialized == true && iter->frag_list != NULL)
+		{
+				printk("break point #1");
+				new_rq = get_request(q, iter->bi_opf, iter, 0);
+				if (IS_ERR(new_rq))
+						printk("get_request func incurred an error");
+				blk_init_request_from_bio(new_rq, iter);
+				printk("break point #2");
+				elv_dispatch_sort(q, new_rq);
+				
+		}*/
+    while (iter)
+    {
+  		elv_dispatch_sort(q, rq);
+    }
 		return 1;
 	}
 	return 0;
