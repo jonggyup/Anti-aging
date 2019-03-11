@@ -1888,6 +1888,7 @@ static blk_qc_t blk_queue_bio(struct request_queue *q, struct bio *bio)
 	struct request *req, *free;
 	unsigned int request_count = 0;
 	unsigned int wb_acct;
+  struct request *prev_req;
 
 	/*
 	 * low level driver can indicate that it wants pages above a
@@ -1952,6 +1953,8 @@ get_rq:
 	 * Returns with the queue unlocked.
 	 */
 	blk_queue_enter_live(q);
+
+new: //Added by Jonggyu
 	req = get_request(q, bio->bi_opf, bio, 0);
 	if (IS_ERR(req)) {
 		blk_queue_exit(q);
@@ -1981,8 +1984,11 @@ get_rq:
   if (bio && bio->fragmented == 100 && bio->frag_list != NULL)
   {
     printk("Jonggyu: Breakpoint #1: In if condition statement");
+    bio = bio->frag_list;
+    req->frag_list = prev_req;
+    prev_req = req;
 
-
+    goto new;
   }
   //
 

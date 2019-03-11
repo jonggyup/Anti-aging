@@ -239,6 +239,9 @@ struct request {
 
 	/* for bidi */
 	struct request *next_rq;
+
+  /* Added by Jonggyu */
+  struct request *frag_list;
 };
 
 static inline bool blk_op_is_scsi(unsigned int op)
