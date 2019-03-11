@@ -1977,6 +1977,15 @@ get_rq:
 	if (test_bit(QUEUE_FLAG_SAME_COMP, &q->queue_flags))
 		req->cpu = raw_smp_processor_id();
 
+  /* Added by Jonggyu */
+  if (bio && bio->fragmented == 100 && bio->frag_list != NULL)
+  {
+    printk("Jonggyu: Breakpoint #1: In if condition statement");
+
+
+  }
+  //
+
 	plug = current->plug;
 	if (plug) {
 		/*
