@@ -22,16 +22,21 @@ static int noop_dispatch(struct request_queue *q, int force)
 {
   struct noop_data *nd = q->elevator->elevator_data;
   struct request *rq;
+  int frag_num;
 
   rq = list_first_entry_or_null(&nd->queue, struct request, queuelist);
   if (rq) {
     if (rq->bio->fragmented == 100){
-//      printk("Jonggyu: Breakpoint #1 in noop-iosched.c/noop_dispatch");    
-      while (rq->frag_list != NULL){
-//      printk("Jonggyu: Breakpoint #2 in noop-iosched.c/noop_dispatch");    
+      frag_num = rq->frag_num;
+      while (frag_num > 0 && rq->frag_list != NULL){
+        printk("Jonggyu: Breakpoint #2 in noop-iosched.c/noop_dispatch");    
         list_del_init(&rq->queuelist);
+        printk("Jonggyu: Breakpoint #3 in noop-iosched.c/noop_dispatch");    
         elv_dispatch_sort(q, rq);
+        printk("Jonggyu: Breakpoint #4 in noop-iosched.c/noop_dispatch");    
         rq = rq->frag_list;
+        printk("Jonggyu: Breakpoint #5 in noop-iosched.c/noop_dispatch");    
+        frag_num--;
       }
     }
     else {

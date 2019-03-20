@@ -1919,6 +1919,7 @@ static blk_qc_t blk_queue_bio(struct request_queue *q, struct bio *bio)
   struct request *prev_req;
   bool fragmented = false;
   int frag_num = bio->frag_num;
+  int ori_frag_num = frag_num;
   
   /*
    * low level driver can indicate that it wants pages above a
@@ -2096,7 +2097,6 @@ get_rq:
 //  }
   if (frag_num > 0 && bio && bio->fragmented == 100 && bio->frag_list != NULL)
   {
-    printk("Jonggyu: frag_num = %d in fragmented if statement", frag_num);
     bio = bio->frag_list;
     req->frag_list = prev_req;
     prev_req = req;
@@ -2107,7 +2107,8 @@ get_rq:
 
   if (fragmented == true)
   {
-    printk("Jonggyu: after generating all the split reqs");
+    printk("Jonggyu: after generating all the split reqs// req->prev = %lu", req->frag_list);
+    req->frag_num = ori_frag_num;
   }
 
 	plug = current->plug;
@@ -2144,7 +2145,8 @@ get_rq:
 out_unlock:
 		spin_unlock_irq(q->queue_lock);
 	}
-
+  if(fragmented == true)
+    printk("Jonggyu: BLK_END_MAKE_REQUST");
 
 	return BLK_QC_T_NONE;
 }

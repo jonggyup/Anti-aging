@@ -142,6 +142,7 @@ struct request {
 	struct request_queue *q;
 	struct blk_mq_ctx *mq_ctx;
 
+  
 	int cpu;
 	unsigned int cmd_flags;		/* op and common flags */
 	req_flags_t rq_flags;
@@ -157,6 +158,11 @@ struct request {
 
 	struct bio *bio;
 	struct bio *biotail;
+  
+  /* Added by Jonggyu */
+  struct request *frag_list;
+  int frag_num;
+  //
 
 	/*
 	 * The hash is used inside the scheduler, and killed once the
@@ -240,8 +246,6 @@ struct request {
 	/* for bidi */
 	struct request *next_rq;
 
-  /* Added by Jonggyu */
-  struct request *frag_list;
 };
 
 static inline bool blk_op_is_scsi(unsigned int op)
