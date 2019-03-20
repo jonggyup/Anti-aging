@@ -185,6 +185,10 @@ static struct bio *__bio_alloc(struct f2fs_sb_info *sbi, block_t blk_addr,
 static inline void __submit_bio(struct f2fs_sb_info *sbi,
 				struct bio *bio, enum page_type type)
 {
+
+  /* Modified by Jonggyu */
+  struct bio *orig = bio; //
+
 	if (!is_read_io(bio_op(bio))) {
 		unsigned int start;
 
@@ -217,13 +221,24 @@ static inline void __submit_bio(struct f2fs_sb_info *sbi,
 		/*
 		 * In the NODE case, we lose next block address chain. So, we
 		 * need to do checkpoint in f2fs_sync_file.
-		 */
-		if (type == NODE)
-			set_sbi_flag(sbi, SBI_NEED_CP);
-	}
+     */
+    if (type == NODE)
+      set_sbi_flag(sbi, SBI_NEED_CP);
+  }
 submit_io:
-	if (is_read_io(bio_op(bio)))
-		trace_f2fs_submit_read_bio(sbi->sb, type, bio);
+  if (is_read_io(bio_op(bio))){
+    trace_f2fs_submit_read_bio(sbi->sb, type, bio);
+    if (bio->fragmented == 100 && bio->frag_list != NULL)//
+    {//
+      printk("Jonggyu: Breakpoint #1 in __submit_bio");
+      while ((bio=bio->frag_list) != NULL)//
+      {//
+        printk("Jonggyu: Breakpoint #2 in __submit_bio");
+        trace_f2fs_submit_read_bio(sbi->sb, type, bio);//
+      }//
+    }//
+    bio = orig;//
+  }
 	else
 		trace_f2fs_submit_write_bio(sbi->sb, type, bio);
 	submit_bio(bio);
@@ -1210,6 +1225,7 @@ static int f2fs_mpage_readpages(struct address_space *mapping,
 	struct f2fs_map_blocks map;
   struct bio *prev = NULL;
   bool fragmented = false;
+  int frag_num = 0;
 
 	map.m_pblk = 0;
 	map.m_lblk = 0;
@@ -1293,14 +1309,12 @@ submit_and_realloc:
 
     /* Added by Jonggyu */
 		if (bio && (last_block_in_bio != block_nr - 1)) {
-      bio->fragmented = 1;
+      bio->fragmented = 100;
+      frag_num++;
       fragmented = true;
       prev = bio;
       bio = NULL;
-      printk ("in read_pages for F2FS");
     }
-
-
 
     if (bio && !__same_bdev(F2FS_I_SB(inode), block_nr, bio)) {
 submit_and_realloc:
@@ -1316,12 +1330,17 @@ submit_and_realloc:
 		if (bio == NULL) {
 			bio = f2fs_grab_read_bio(inode, block_nr, nr_pages);
 			if (IS_ERR(bio)) {
+        printk("Jonggyu: bio creation error in f2fs_read");
 				bio = NULL; //
         prev = NULL; //
         fragmented = false; //
 				goto set_error_page;
 			}
       bio->frag_list = prev;
+//      if (fragmented == true)
+//      {
+//        printk("Jonggyu: Breakpoint #1 in data.c// bio->frag_list = %lu, fragmented = %d, bi_vcnt = %d", bio->frag_list, bio->frag_list->fragmented, bio->frag_list->bi_vcnt);
+//      }
 		}
 
 		if (bio_add_page(bio, page, blocksize, 0) < blocksize)
@@ -1336,27 +1355,41 @@ set_error_page:
 		goto next_page;
 confused:
 		if (bio) {
-      if (fragmented == true) //
+      if (fragmented == true) { //
         bio->fragmented = 100; //
+        bio->frag_num = frag_num;
+      }
 			__submit_bio(F2FS_I_SB(inode), bio, DATA);
 			bio = NULL; //
       prev = NULL; //
       fragmented = false; //
+      frag_num = 0;//
 		}
 		unlock_page(page);
 next_page:
 		if (pages)
 			put_page(page);
-	}
-	BUG_ON(pages && !list_empty(pages));
-	if (bio) {
-      if (fragmented == true) //
-        bio->fragmented = 100; //
+  }
+  BUG_ON(pages && !list_empty(pages));
+  if (bio) {
+    if (fragmented == true) { //
+      bio->fragmented = 100; //
+      bio->frag_num = frag_num;
+    }
     prev = NULL; //
     fragmented = false; //
-		__submit_bio(F2FS_I_SB(inode), bio, DATA);
+    frag_num = 0;//
+//    printk("Jonggyu: Breakpoint #1 in data.c"); //
+    //
+//    while (bio && bio->fragmented == 100 && bio->frag_list != NULL)
+//    {
+//      printk("Jonggyu: Breakpoint #1 in data.c// bio = %lu, fragmented = %d, bi_vcnt = %d", bio, bio->fragmented, bio->bi_vcnt);
+//      bio = bio->frag_list;
+//    }
+    //
+    __submit_bio(F2FS_I_SB(inode), bio, DATA);
   }
-	return 0;
+  return 0;
 }
 
 static int f2fs_read_data_page(struct file *file, struct page *page)

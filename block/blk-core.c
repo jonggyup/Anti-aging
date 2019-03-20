@@ -1242,16 +1242,19 @@ static struct request *__get_request(struct request_list *rl, unsigned int op,
 	gfp_t gfp_mask = flags & BLK_MQ_REQ_NOWAIT ? GFP_ATOMIC :
 			 __GFP_DIRECT_RECLAIM;
 	req_flags_t rq_flags = RQF_ALLOCED;
-
+  
+//  printk ("Jonggyu: Breakpoint #111");
 	lockdep_assert_held(q->queue_lock);
-
+//  printk ("Jonggyu: Breakpoint #112");
 	if (unlikely(blk_queue_dying(q)))
 		return ERR_PTR(-ENODEV);
-
+//  printk ("Jonggyu: Breakpoint #113");
 	may_queue = elv_may_queue(q, op);
+//  printk ("Jonggyu: Breakpoint #114");
 	if (may_queue == ELV_MQUEUE_NO)
 		goto rq_starved;
 
+//  printk ("Jonggyu: Breakpoint #115");
 	if (rl->count[is_sync]+1 >= queue_congestion_on_threshold(q)) {
 		if (rl->count[is_sync]+1 >= q->nr_requests) {
 			/*
@@ -1278,6 +1281,7 @@ static struct request *__get_request(struct request_list *rl, unsigned int op,
 		blk_set_congested(rl, is_sync);
 	}
 
+//  printk ("Jonggyu: Breakpoint #116");
 	/*
 	 * Only allow batching queuers to allocate up to 50% over the defined
 	 * limit of requests, otherwise we could have thousands of requests
@@ -1286,6 +1290,7 @@ static struct request *__get_request(struct request_list *rl, unsigned int op,
 	if (rl->count[is_sync] >= (3 * q->nr_requests / 2))
 		return ERR_PTR(-ENOMEM);
 
+//  printk ("Jonggyu: Breakpoint #117");
 	q->nr_rqs[is_sync]++;
 	rl->count[is_sync]++;
 	rl->starved[is_sync] = 0;
@@ -1310,22 +1315,28 @@ static struct request *__get_request(struct request_list *rl, unsigned int op,
 			icq = ioc_lookup_icq(ioc, q);
 	}
 
+//  printk ("Jonggyu: Breakpoint #118");
 	if (blk_queue_io_stat(q))
 		rq_flags |= RQF_IO_STAT;
 	spin_unlock_irq(q->queue_lock);
 
+//  printk ("Jonggyu: Breakpoint #119");
 	/* allocate and init request */
 	rq = mempool_alloc(rl->rq_pool, gfp_mask);
 	if (!rq)
 		goto fail_alloc;
 
+//  printk ("Jonggyu: Breakpoint #120");
 	blk_rq_init(q, rq);
+
+//  printk ("Jonggyu: Breakpoint #121");
 	blk_rq_set_rl(rq, rl);
 	rq->cmd_flags = op;
 	rq->rq_flags = rq_flags;
 	if (flags & BLK_MQ_REQ_PREEMPT)
 		rq->rq_flags |= RQF_PREEMPT;
 
+//  printk ("Jonggyu: Breakpoint #122");
 	/* init elvpriv */
 	if (rq_flags & RQF_ELVPRIV) {
 		if (unlikely(et->icq_cache && !icq)) {
@@ -1335,10 +1346,15 @@ static struct request *__get_request(struct request_list *rl, unsigned int op,
 				goto fail_elvpriv;
 		}
 
+//  printk ("Jonggyu: Breakpoint #123");
 		rq->elv.icq = icq;
-		if (unlikely(elv_set_request(q, rq, bio, gfp_mask)))
+		if (unlikely(elv_set_request(q, rq, bio, gfp_mask))){
+      if (bio->fragmented == 100) //
+        printk("Jonggyu: Breakpoint #1 in __get_request// failed to elv_set_request");//
 			goto fail_elvpriv;
+    }
 
+//  printk ("Jonggyu: Breakpoint #124");
 		/* @rq->elv.icq holds io_context until @rq is freed */
 		if (icq)
 			get_io_context(icq->ioc);
@@ -1353,6 +1369,7 @@ out:
 	if (ioc_batching(q, ioc))
 		ioc->nr_batch_requests--;
 
+//  printk ("Jonggyu: Breakpoint #125");
 	trace_block_getrq(q, bio, op);
 	return rq;
 
@@ -1422,10 +1439,12 @@ static struct request *get_request(struct request_queue *q, unsigned int op,
 
 	lockdep_assert_held(q->queue_lock);
 	WARN_ON_ONCE(q->mq_ops);
-
+//  printk("Jonggyu: Breakpoint #11");
 	rl = blk_get_rl(q, bio);	/* transferred to @rq on success */
+//  printk("Jonggyu: Breakpoint #12");
 retry:
 	rq = __get_request(rl, op, bio, flags);
+//  printk("Jonggyu: Breakpoint #13");
 	if (!IS_ERR(rq))
 		return rq;
 
@@ -1434,18 +1453,23 @@ retry:
 		return ERR_PTR(-EAGAIN);
 	}
 
+//  printk("Jonggyu: Breakpoint #14");
 	if ((flags & BLK_MQ_REQ_NOWAIT) || unlikely(blk_queue_dying(q))) {
 		blk_put_rl(rl);
 		return rq;
 	}
 
+//  printk("Jonggyu: Breakpoint #15");
 	/* wait on @rl and retry */
 	prepare_to_wait_exclusive(&rl->wait[is_sync], &wait,
 				  TASK_UNINTERRUPTIBLE);
 
 	trace_block_sleeprq(q, bio, op);
 
+//  printk("Jonggyu: Breakpoint 16#");
 	spin_unlock_irq(q->queue_lock);
+
+//  printk("Jonggyu: Breakpoint #17");
 	io_schedule();
 
 	/*
@@ -1453,9 +1477,13 @@ retry:
 	 * to allocate at least one request, and up to a big batch of them
 	 * for a small period time.  See ioc_batching, ioc_set_batching
 	 */
+
+//  printk("Jonggyu: Breakpoint #18");
 	ioc_set_batching(q, current->io_context);
 
 	spin_lock_irq(q->queue_lock);
+
+//  printk("Jonggyu: Breakpoint #19");
 	finish_wait(&rl->wait[is_sync], &wait);
 
 	goto retry;
@@ -1883,42 +1911,63 @@ EXPORT_SYMBOL_GPL(blk_init_request_from_bio);
 
 static blk_qc_t blk_queue_bio(struct request_queue *q, struct bio *bio)
 {
-	struct blk_plug *plug;
-	int where = ELEVATOR_INSERT_SORT;
-	struct request *req, *free;
-	unsigned int request_count = 0;
-	unsigned int wb_acct;
+  struct blk_plug *plug;
+  int where = ELEVATOR_INSERT_SORT;
+  struct request *req, *free;
+  unsigned int request_count = 0;
+  unsigned int wb_acct;
   struct request *prev_req;
+  bool fragmented = false;
+  int frag_num = bio->frag_num;
+  
+  /*
+   * low level driver can indicate that it wants pages above a
+   * certain limit bounced to low memory (ie for highmem, or even
+   * ISA dma in theory)
+   */
 
-	/*
-	 * low level driver can indicate that it wants pages above a
-	 * certain limit bounced to low memory (ie for highmem, or even
-	 * ISA dma in theory)
-	 */
-	blk_queue_bounce(q, &bio);
 
-	blk_queue_split(q, &bio);
+  if (fragmented == true || bio->fragmented == 100) {
+    printk("Jonggyu: Breakpoint #1");
+    printk("Parameter info: q = %lu, bio->bi_opf = %lu, bio = %lu", q, bio);
+    printk("Parameter info printed successfully");
+  }
 
-	if (!bio_integrity_prep(bio))
-		return BLK_QC_T_NONE;
+  if (bio->fragmented == 100) {
+    printk("Jonggyu: Breakpoint #2");
+    blk_queue_bounce(q, &bio);
+    printk("Jonggyu: Breakpoint #3");
+  }
+  else
+    blk_queue_bounce(q, &bio);
 
-	if (op_is_flush(bio->bi_opf)) {
-		spin_lock_irq(q->queue_lock);
-		where = ELEVATOR_INSERT_FLUSH;
-		goto get_rq;
-	}
+  if (bio->fragmented != 100)
+    blk_queue_split(q, &bio);
 
-	/*
-	 * Check if we can merge with the plugged list before grabbing
-	 * any locks.
-	 */
+  if (!bio_integrity_prep(bio))
+    return BLK_QC_T_NONE;
+
+  if (op_is_flush(bio->bi_opf)) {
+    spin_lock_irq(q->queue_lock);
+    where = ELEVATOR_INSERT_FLUSH;
+    goto get_rq;
+  }
+
+  /*
+   * Check if we can merge with the plugged list before grabbing
+   * any locks.
+   */
 	if (!blk_queue_nomerges(q)) {
 		if (blk_attempt_plug_merge(q, bio, &request_count, NULL))
 			return BLK_QC_T_NONE;
 	} else
 		request_count = blk_plug_queued_count(q);
-
-	spin_lock_irq(q->queue_lock);
+//
+//  if (fragmented == true || bio->fragmented == 100) {
+//    printk("Jonggyu: Breakpoint #4");
+//  }
+//
+  spin_lock_irq(q->queue_lock);
 
 	switch (elv_merge(q, &req, bio)) {
 	case ELEVATOR_BACK_MERGE:
@@ -1945,17 +1994,50 @@ static blk_qc_t blk_queue_bio(struct request_queue *q, struct bio *bio)
 		break;
 	}
 
+//  printk("Jonggyu: Breakpoint #5");
+
+//
+//  if (fragmented == true || bio->fragmented == 100) {
+//    printk("Jonggyu: Breakpoint #6");
+//  }
+//
+//
+new: //Added by Jonggyu
+
+  if (fragmented == true || bio->fragmented == 100) {
+    printk("Jonggyu: Breakpoint #5");
+  }
+//
+
 get_rq:
 	wb_acct = wbt_wait(q->rq_wb, bio, q->queue_lock);
-
+//
+  if (fragmented == true || bio->fragmented == 100) {
+    printk("Jonggyu: Breakpoint #7");
+  }
+//
 	/*
 	 * Grab a free request. This is might sleep but can not fail.
 	 * Returns with the queue unlocked.
 	 */
 	blk_queue_enter_live(q);
 
-new: //Added by Jonggyu
+//
+  if (fragmented == true || bio->fragmented == 100) {
+    printk("Jonggyu: Breakpoint #8");
+  }
+//
+
+//  printk("Jonggyu: Breakpoint #6");
+//  printk("Parameter info: q = %lu, bio->bi_opf = %lu, bio = %lu", q, bio->bi_opf, bio);
+//  printk("Parameter info printed successfully");
 	req = get_request(q, bio->bi_opf, bio, 0);
+//  printk("Jonggyu: Breakpoint #7");
+//
+//  if (fragmented == true || bio->fragmented == 100) {
+//    printk("Jonggyu: Breakpoint #9");
+//  }
+//
 	if (IS_ERR(req)) {
 		blk_queue_exit(q);
 		__wbt_done(q->rq_wb, wb_acct);
@@ -1967,33 +2049,74 @@ new: //Added by Jonggyu
 		goto out_unlock;
 	}
 
+  if (fragmented == true || bio->fragmented == 100) {
+    printk("Jonggyu: Breakpoint #9");
+  }
+
 	wbt_track(&req->issue_stat, wb_acct);
 
+//  printk("Jonggyu: Breakpoint #8");
 	/*
 	 * After dropping the lock and possibly sleeping here, our request
 	 * may now be mergeable after it had proven unmergeable (above).
 	 * We don't worry about that case for efficiency. It won't happen
 	 * often, and the elevators are able to handle it.
 	 */
-	blk_init_request_from_bio(req, bio);
-
-	if (test_bit(QUEUE_FLAG_SAME_COMP, &q->queue_flags))
-		req->cpu = raw_smp_processor_id();
-
+//  printk("Jonggyu: Breakpoint #9");
+  blk_init_request_from_bio(req, bio);
+//  printk("Jonggyu: Breakpoint #10");
+  if (fragmented == true || bio->fragmented == 100) {
+    printk("Jonggyu: Breakpoint #10");
+  }
+ 
+  
+  if (fragmented == false) {
+  	if (test_bit(QUEUE_FLAG_SAME_COMP, &q->queue_flags))
+	  	req->cpu = raw_smp_processor_id();
+  }
+  
   /* Added by Jonggyu */
-  if (bio && bio->fragmented == 100 && bio->frag_list != NULL)
+//  if (bio && bio->fragmented == 100 && bio->frag_list != NULL)
+//  {
+//    printk("Jonggyu: Breakpoint #10");
+//    bio = bio->frag_list;
+//    printk("Jonggyu: Breakpoint #11");
+//    req->frag_list = prev_req;
+//    printk("Jonggyu: Breakpoint #12");
+//    prev_req = req;
+//    printk("Jonggyu: Breakpoint #13");
+//    fragmented = true;
+//
+//    goto new;
+//  }
+  //
+//  if (fragmented == true)
+//  {
+//    printk("Jonggyu: Breakpoint #14");
+//  }
+  if (frag_num > 0 && bio && bio->fragmented == 100 && bio->frag_list != NULL)
   {
-    printk("Jonggyu: Breakpoint #1: In if condition statement");
+    printk("Jonggyu: frag_num = %d in fragmented if statement", frag_num);
     bio = bio->frag_list;
     req->frag_list = prev_req;
     prev_req = req;
-
+    fragmented = true;
+    frag_num--;
     goto new;
   }
-  //
+
+  if (fragmented == true)
+  {
+    printk("Jonggyu: after generating all the split reqs");
+  }
 
 	plug = current->plug;
 	if (plug) {
+//    if (fragmented == true)
+//    {
+//      printk("Jonggyu: Breakpoint #15// In plug");
+//    }
+
 		/*
 		 * If this is the first request added after a plug, fire
 		 * of a plug trace.
@@ -2011,7 +2134,8 @@ new: //Added by Jonggyu
 				trace_block_plug(q);
 			}
 		}
-		list_add_tail(&req->queuelist, &plug->list);
+    if (bio->fragmented != 100 || bio->frag_list == NULL)
+  		list_add_tail(&req->queuelist, &plug->list);
 		blk_account_io_start(req, true);
 	} else {
 		spin_lock_irq(q->queue_lock);
@@ -2020,6 +2144,7 @@ new: //Added by Jonggyu
 out_unlock:
 		spin_unlock_irq(q->queue_lock);
 	}
+
 
 	return BLK_QC_T_NONE;
 }
@@ -2403,6 +2528,15 @@ blk_qc_t submit_bio(struct bio *bio)
 	 * If it's a regular read/write or a barrier with data attached,
 	 * go through the normal accounting stuff before submission.
 	 */
+  struct bio *orig = bio;
+
+/* Added by Jonggyu */
+again:
+//
+  if (bio->fragmented == 100) {
+       printk("Jonggyu: Breakpoint #1 in submit_bio");
+       printk("bio info = %lu, bio_fragmented = %d, bi_vcnt = %d", bio, bio->fragmented, bio->bi_vcnt);
+  }
 	if (bio_has_data(bio)) {
 		unsigned int count;
 
@@ -2427,7 +2561,15 @@ blk_qc_t submit_bio(struct bio *bio)
 				bio_devname(bio, b), count);
 		}
 	}
-
+  if (bio->fragmented == 100 && bio->frag_list != NULL)
+  {
+    printk("Jonggyu: breakpoint #2 in submit_bio");
+    bio = bio->frag_list;
+    printk("Jonggyu: breakpoint #3 in submit_bio");
+    printk("bio info = %lu, bio_fragmented = %d, bi_vcnt = %d", bio, bio->fragmented, bio->bi_vcnt);
+    goto again;
+  }
+  bio = orig;
 	return generic_make_request(bio);
 }
 EXPORT_SYMBOL(submit_bio);

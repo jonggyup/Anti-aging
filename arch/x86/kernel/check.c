@@ -147,7 +147,12 @@ static DECLARE_DELAYED_WORK(bios_check_work, check_corruption);
 
 static void check_corruption(struct work_struct *dummy)
 {
-	check_for_bios_corruption();
+	/*
+   * Modified by Jonggyu
+   * Disabling bio corruption check not to generate the error.
+   *
+   * check_for_bios_corruption();
+   */
 	schedule_delayed_work(&bios_check_work,
 		round_jiffies_relative(corruption_check_period*HZ));
 }

@@ -185,6 +185,10 @@ void blk_queue_split(struct request_queue *q, struct bio **bio)
 {
 	struct bio *split, *res;
 	unsigned nsegs;
+  
+  /* Added by Jonggyu */
+  if ( (*bio)->fragmented == 100)
+    printk(" Jonggyu: Breakpoint #1 in blk-merge.c/blk_queue_split");
 
 	switch (bio_op(*bio)) {
 	case REQ_OP_DISCARD:

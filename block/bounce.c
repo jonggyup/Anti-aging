@@ -202,6 +202,9 @@ static void __blk_queue_bounce(struct request_queue *q, struct bio **bio_orig,
 	int sectors = 0;
 	bool passthrough = bio_is_passthrough(*bio_orig);
 
+  if ((*bio_orig)->fragmented == 100)
+    printk ("Jonggyu: Breakpoint #101");
+
 	bio_for_each_segment(from, *bio_orig, iter) {
 		if (i++ < BIO_MAX_PAGES)
 			sectors += from.bv_len >> 9;
@@ -210,6 +213,9 @@ static void __blk_queue_bounce(struct request_queue *q, struct bio **bio_orig,
 	}
 	if (!bounce)
 		return;
+ 
+  if ((*bio_orig)->fragmented == 100)
+    printk ("Jonggyu: Breakpoint #102");
 
 	if (!passthrough && sectors < bio_sectors(*bio_orig)) {
 		bio = bio_split(*bio_orig, sectors, GFP_NOIO, bounce_bio_split);
@@ -217,6 +223,9 @@ static void __blk_queue_bounce(struct request_queue *q, struct bio **bio_orig,
 		generic_make_request(*bio_orig);
 		*bio_orig = bio;
 	}
+  if ((*bio_orig)->fragmented == 100)
+    printk ("Jonggyu: Breakpoint #103");
+
 	bio = bio_clone_bioset(*bio_orig, GFP_NOIO, passthrough ? NULL :
 			bounce_bio_set);
 
@@ -257,18 +266,27 @@ static void __blk_queue_bounce(struct request_queue *q, struct bio **bio_orig,
 
 	bio->bi_private = *bio_orig;
 	*bio_orig = bio;
+
+  if ((*bio_orig)->fragmented == 100)
+    printk ("Jonggyu: Breakpoint #104");
 }
 
 void blk_queue_bounce(struct request_queue *q, struct bio **bio_orig)
 {
 	mempool_t *pool;
+  
+  /* Added by Jonggyu */
+  struct bio *bio = *bio_orig;
 
 	/*
 	 * Data-less bio, nothing to bounce
 	 */
+  if (bio->fragmented == 100)
+    printk ("Jonggyu: Breakpoint #11");
 	if (!bio_has_data(*bio_orig))
 		return;
-
+  if (bio->fragmented == 100)
+    printk ("Jonggyu: Breakpoint #12");
 	/*
 	 * for non-isa bounce case, just check if the bounce pfn is equal
 	 * to or bigger than the highest pfn in the system -- in that case,
@@ -282,7 +300,8 @@ void blk_queue_bounce(struct request_queue *q, struct bio **bio_orig)
 		BUG_ON(!isa_page_pool);
 		pool = isa_page_pool;
 	}
-
+  if (bio->fragmented == 100)
+    printk ("Jonggyu: Breakpoint #13");
 	/*
 	 * slow path
 	 */

@@ -4426,6 +4426,10 @@ cfq_set_request(struct request_queue *q, struct request *rq, struct bio *bio,
 	const int rw = rq_data_dir(rq);
 	const bool is_sync = rq_is_sync(rq);
 	struct cfq_queue *cfqq;
+  
+  /* Added by Jonggyu */
+  if  (bio->fragmented == 100)
+    printk ("Jonggyu: Breakpoint #1 in cfq-iosched.c");
 
 	spin_lock_irq(q->queue_lock);
 

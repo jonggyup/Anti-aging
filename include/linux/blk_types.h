@@ -48,6 +48,14 @@ struct blk_issue_stat {
  * stacking drivers)
  */
 struct bio {
+
+  /* Added by Jonggyu */
+  int fragmented;
+  struct bio *frag_list;
+  int frag_num;
+  //
+
+
 	struct bio		*bi_next;	/* request queue link */
 	struct gendisk		*bi_disk;
 	unsigned int		bi_opf;		/* bottom bits req flags,
@@ -96,6 +104,8 @@ struct bio {
 #endif
 	};
 
+
+
 	unsigned short		bi_vcnt;	/* how many bio_vec's */
 
 	/*
@@ -116,10 +126,6 @@ struct bio {
 	 * MUST obviously be kept at the very end of the bio.
 	 */
 	struct bio_vec		bi_inline_vecs[0];
-
-  /* Added by Jonggyu */
-  int fragmented;
-  struct bio *frag_list;
 
 
 };

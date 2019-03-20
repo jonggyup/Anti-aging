@@ -15,30 +15,38 @@ struct noop_data {
 static void noop_merged_requests(struct request_queue *q, struct request *rq,
 				 struct request *next)
 {
-	list_del_init(&next->queuelist);
+  list_del_init(&next->queuelist);
 }
 
 static int noop_dispatch(struct request_queue *q, int force)
 {
-	struct noop_data *nd = q->elevator->elevator_data;
-	struct request *rq;
+  struct noop_data *nd = q->elevator->elevator_data;
+  struct request *rq;
 
-	rq = list_first_entry_or_null(&nd->queue, struct request, queuelist);
-	if (rq) {
-    while (rq->frag_list != NULL){
+  rq = list_first_entry_or_null(&nd->queue, struct request, queuelist);
+  if (rq) {
+    if (rq->bio->fragmented == 100){
+//      printk("Jonggyu: Breakpoint #1 in noop-iosched.c/noop_dispatch");    
+      while (rq->frag_list != NULL){
+//      printk("Jonggyu: Breakpoint #2 in noop-iosched.c/noop_dispatch");    
+        list_del_init(&rq->queuelist);
+        elv_dispatch_sort(q, rq);
+        rq = rq->frag_list;
+      }
+    }
+    else {
       list_del_init(&rq->queuelist);
-	  	elv_dispatch_sort(q, rq);
-      rq- = rq->frag_list;
+      elv_dispatch_sort(q, rq);
     }
 
-		return 1;
-	}
-	return 0;
+    return 1;
+  }
+  return 0;
 }
 
 static void noop_add_request(struct request_queue *q, struct request *rq)
 {
-	struct noop_data *nd = q->elevator->elevator_data;
+  struct noop_data *nd = q->elevator->elevator_data;
 
 	list_add_tail(&rq->queuelist, &nd->queue);
 }
