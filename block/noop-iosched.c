@@ -26,8 +26,9 @@ static int noop_dispatch(struct request_queue *q, int force)
 
   rq = list_first_entry_or_null(&nd->queue, struct request, queuelist);
   if (rq) {
-    if (rq->bio->fragmented == 100){
+/*    if (rq->bio->fragmented == 100){
       frag_num = rq->frag_num;
+      printk ("frag_num = %d in noop", frag_num);
       while (frag_num > 0 && rq->frag_list != NULL){
         printk("Jonggyu: Breakpoint #2 in noop-iosched.c/noop_dispatch");    
         list_del_init(&rq->queuelist);
@@ -39,10 +40,10 @@ static int noop_dispatch(struct request_queue *q, int force)
         frag_num--;
       }
     }
-    else {
+    else {*/
       list_del_init(&rq->queuelist);
       elv_dispatch_sort(q, rq);
-    }
+  //  }
 
     return 1;
   }

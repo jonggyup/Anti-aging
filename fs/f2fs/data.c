@@ -1233,6 +1233,8 @@ static int f2fs_mpage_readpages(struct address_space *mapping,
 	map.m_flags = 0;
 	map.m_next_pgofs = NULL;
 
+  printk ("Jonggyu: In f2fs_mpage_readpages");
+
 	for (page_idx = 0; nr_pages; page_idx++, nr_pages--) {
 
 		if (pages) {
@@ -1307,13 +1309,16 @@ submit_and_realloc:
 		}
 */
 
-    /* Added by Jonggyu */
+    /* Added by Jonggyu 
+     * When fragmentation is detected 
+     */
 		if (bio && (last_block_in_bio != block_nr - 1)) {
       bio->fragmented = 100;
       frag_num++;
       fragmented = true;
       prev = bio;
       bio = NULL;
+      printk("Jonggyu: Fragmentation is detected in f2fs/data.c");
     }
 
     if (bio && !__same_bdev(F2FS_I_SB(inode), block_nr, bio)) {
