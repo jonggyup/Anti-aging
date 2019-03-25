@@ -142,7 +142,10 @@ struct request {
 	struct request_queue *q;
 	struct blk_mq_ctx *mq_ctx;
 
-  
+   /* Added by Jonggyu */
+  struct request *frag_list;
+  int frag_num;
+  // 
 	int cpu;
 	unsigned int cmd_flags;		/* op and common flags */
 	req_flags_t rq_flags;
@@ -159,10 +162,7 @@ struct request {
 	struct bio *bio;
 	struct bio *biotail;
   
-  /* Added by Jonggyu */
-  struct request *frag_list;
-  int frag_num;
-  //
+
 
 	/*
 	 * The hash is used inside the scheduler, and killed once the

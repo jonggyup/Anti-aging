@@ -22,29 +22,24 @@ static int noop_dispatch(struct request_queue *q, int force)
 {
   struct noop_data *nd = q->elevator->elevator_data;
   struct request *rq;
-  int frag_num;
+  int frag_num = 0;
 
   rq = list_first_entry_or_null(&nd->queue, struct request, queuelist);
   if (rq) {
-/*    if (rq->bio->fragmented == 100){
-      frag_num = rq->frag_num;
+    frag_num = rq->frag_num;
+    list_del_init(&rq->queuelist);
+    elv_dispatch_sort(q, rq);
+    if (frag_num > 0) {
       printk ("frag_num = %d in noop", frag_num);
       while (frag_num > 0 && rq->frag_list != NULL){
-        printk("Jonggyu: Breakpoint #2 in noop-iosched.c/noop_dispatch");    
-        list_del_init(&rq->queuelist);
-        printk("Jonggyu: Breakpoint #3 in noop-iosched.c/noop_dispatch");    
-        elv_dispatch_sort(q, rq);
-        printk("Jonggyu: Breakpoint #4 in noop-iosched.c/noop_dispatch");    
+        printk("Jonggyu: Breakpoint #1 in noop-iosched.c/noop_dispatch");    
         rq = rq->frag_list;
-        printk("Jonggyu: Breakpoint #5 in noop-iosched.c/noop_dispatch");    
+        printk("Jonggyu: Breakpoint #2 in noop-iosched.c/noop_dispatch");    
+        elv_dispatch_sort(q, rq);
+        printk("Jonggyu: Breakpoint #3 in noop-iosched.c/noop_dispatch");    
         frag_num--;
       }
     }
-    else {*/
-      list_del_init(&rq->queuelist);
-      elv_dispatch_sort(q, rq);
-  //  }
-
     return 1;
   }
   return 0;

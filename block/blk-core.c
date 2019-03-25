@@ -2021,16 +2021,13 @@ get_rq:
 	 * Returns with the queue unlocked.
 	 */
 
-new: //Added by Jonggyu
 
-  if (fragmented == true || bio->fragmented == 100) {
-    printk("Jonggyu: Breakpoint #5");
-  }
-//
 
 	blk_queue_enter_live(q);
 
 //
+new: //Added by Jonggyu
+
   if (fragmented == true || bio->fragmented == 100) {
     printk("Jonggyu: Breakpoint #8");
   }
@@ -2061,7 +2058,8 @@ new: //Added by Jonggyu
     printk("Jonggyu: Breakpoint #9");
   }
 
-	wbt_track(&req->issue_stat, wb_acct);
+  if (bio->frag_list == NULL)
+  	wbt_track(&req->issue_stat, wb_acct);
 
 //  printk("Jonggyu: Breakpoint #8");
 	/*
@@ -2085,7 +2083,7 @@ new: //Added by Jonggyu
   {
     printk("Jonggyu: Breakpoint #10");
     bio = bio->frag_list;
-    printk("Jonggyu: Breakpoint #11");
+    printk("Jonggyu: Breakpoint #11: bio = %lu", bio);
     req->frag_list = prev_req;
     printk("Jonggyu: Breakpoint #12");
     prev_req = req;
@@ -2112,15 +2110,23 @@ new: //Added by Jonggyu
   }
 
 */
+
+  if (fragmented == true)
+  {
+    printk("Jonggyu: after generating all the split reqs// current req = %lu current bio = %lu", req, bio);
+    req->frag_list = prev_req;
+    printk("Jonggyu: after generating all the split reqs// req->prev = %lu", req->frag_list);
+    req->frag_num = ori_frag_num;
+    req = prev_req;
+  }
 	plug = current->plug;
 
 	if (plug) {
-//    if (fragmented == true)
-//    {
-//      printk("Jonggyu: Breakpoint #15// In plug");
-//    }
+    if (fragmented == true)
+      printk("Jonggyu: Breakpoint #01// In plug");
 
 		/*
+     * 
 		 * If this is the first request added after a plug, fire
 		 * of a plug trace.
 		 *
@@ -2130,19 +2136,33 @@ new: //Added by Jonggyu
 		if (!request_count || list_empty(&plug->list))
 			trace_block_plug(q);
 		else {
+    if (fragmented == true)
+      printk("Jonggyu: Breakpoint #02// In plug");
+
+
 			struct request *last = list_entry_rq(plug->list.prev);
 			if (request_count >= BLK_MAX_REQUEST_COUNT ||
 			    blk_rq_bytes(last) >= BLK_PLUG_FLUSH_SIZE) {
 				blk_flush_plug_list(plug, false);
 				trace_block_plug(q);
+    if (fragmented == true)
+      printk("Jonggyu: Breakpoint #03// In plug");
+
+
 			}
 		}
-    if (bio->fragmented != 100 || bio->frag_list == NULL)
-  		list_add_tail(&req->queuelist, &plug->list);
+  	list_add_tail(&req->queuelist, &plug->list);
 		blk_account_io_start(req, true);
+    if (fragmented == true)
+      printk("Jonggyu: Breakpoint #04// In plug");
+
+
 	} else {
 		spin_lock_irq(q->queue_lock);
 		add_acct_request(q, req, where);
+    if (fragmented == true)
+      printk("Jonggyu: Breakpoint #05// In plug");
+
 		__blk_run_queue(q);
 out_unlock:
 		spin_unlock_irq(q->queue_lock);
@@ -2150,13 +2170,6 @@ out_unlock:
   if(fragmented == true)
     printk("Jonggyu: BLK_END_MAKE_REQUST");
 
-  if (fragmented == true)
-  {
-    printk("Jonggyu: after generating all the split reqs// prev = %lu", prev_req);
-    req->frag_list = prev_req;
-    printk("Jonggyu: after generating all the split reqs// req->prev = %lu", req->frag_list);
-    req->frag_num = ori_frag_num;
-  }
 
 	return BLK_QC_T_NONE;
 }
@@ -2458,8 +2471,15 @@ blk_qc_t generic_make_request(struct bio *bio)
 			bio_list_on_stack[1] = bio_list_on_stack[0];
 			bio_list_init(&bio_list_on_stack[0]);
 			ret = q->make_request_fn(q, bio);
+      
+      /* Added by Jonggyu */
+      if (bio->fragmented == 100)
+        printk("Jonggyu: Breakpoint #1 in generic_make_request()");
 
 			blk_queue_exit(q);
+
+      if (bio->fragmented == 100)
+        printk("Jonggyu: Breakpoint #2 in generic_make_request()");
 
 			/* sort new bios into those for a lower level
 			 * and those for the same level
@@ -2487,6 +2507,7 @@ blk_qc_t generic_make_request(struct bio *bio)
 	current->bio_list = NULL; /* deactivate */
 
 out:
+
 	return ret;
 }
 EXPORT_SYMBOL(generic_make_request);
