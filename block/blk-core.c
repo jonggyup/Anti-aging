@@ -1932,20 +1932,11 @@ static blk_qc_t blk_queue_bio(struct request_queue *q, struct bio *bio)
    * ISA dma in theory)
    */
 
-
-  if (fragmented == true || bio->fragmented == 100) {
-    printk("Jonggyu: Breakpoint #1");
-    printk("Parameter info: q = %lu, bio->bi_opf = %lu, bio = %lu", q, bio);
-    printk("Parameter info printed successfully");
-  }
-
-  if (bio->fragmented == 100) {
-    printk("Jonggyu: Breakpoint #2");
-    blk_queue_bounce(q, &bio);
-    printk("Jonggyu: Breakpoint #3");
-  }
-  else
-    blk_queue_bounce(q, &bio);
+  /* Iterative behavior from here, when fragmented bio is detected 
+   */
+new:
+//
+  blk_queue_bounce(q, &bio);
 
   if (bio->fragmented != 100)
     blk_queue_split(q, &bio);
@@ -2021,17 +2012,7 @@ get_rq:
 	 * Returns with the queue unlocked.
 	 */
 
-
-
 	blk_queue_enter_live(q);
-
-//
-new: //Added by Jonggyu
-
-  if (fragmented == true || bio->fragmented == 100) {
-    printk("Jonggyu: Breakpoint #8");
-  }
-//
 
 //  printk("Jonggyu: Breakpoint #6");
 //  printk("Parameter info: q = %lu, bio->bi_opf = %lu, bio = %lu", q, bio->bi_opf, bio);
