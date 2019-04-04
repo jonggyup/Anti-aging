@@ -2011,8 +2011,8 @@ get_rq:
 	 * Grab a free request. This is might sleep but can not fail.
 	 * Returns with the queue unlocked.
 	 */
-
-	blk_queue_enter_live(q);
+  if (fragmented == false)
+  	blk_queue_enter_live(q);
 
 //  printk("Jonggyu: Breakpoint #6");
 //  printk("Parameter info: q = %lu, bio->bi_opf = %lu, bio = %lu", q, bio->bi_opf, bio);
