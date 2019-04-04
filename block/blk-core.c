@@ -2405,6 +2405,12 @@ blk_qc_t generic_make_request(struct bio *bio)
 	struct bio_list bio_list_on_stack[2];
 	blk_qc_t ret = BLK_QC_T_NONE;
 
+  /* Added by Jonggyu */
+  bool fragmented = false;
+  
+  if (bio->fragmented == 100)
+    fragmented = true;
+
 	if (!generic_make_request_checks(bio))
 		goto out;
 
@@ -2466,8 +2472,17 @@ blk_qc_t generic_make_request(struct bio *bio)
 			 * and those for the same level
 			 */
 			bio_list_init(&lower);
+      if (fragmented == true)
+          printk("Jonggyu: Breakpoint #3 in generic_make_request()");
+
 			bio_list_init(&same);
+      if (fragmented == true)
+          printk("Jonggyu: Breakpoint #4 in generic_make_request()");
+
 			while ((bio = bio_list_pop(&bio_list_on_stack[0])) != NULL)
+        if (fragmented == true)
+          printk("Jonggyu: Breakpoint #5 in generic_make_request()");
+
 				if (q == bio->bi_disk->queue)
 					bio_list_add(&same, bio);
 				else
@@ -2488,6 +2503,8 @@ blk_qc_t generic_make_request(struct bio *bio)
 	current->bio_list = NULL; /* deactivate */
 
 out:
+  if (fragmented == true)
+    printk("Jonggyu: Breakpoint #6 in generic_make_request()");
 
 	return ret;
 }

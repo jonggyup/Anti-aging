@@ -242,6 +242,9 @@ submit_io:
 	else
 		trace_f2fs_submit_write_bio(sbi->sb, type, bio);
 	submit_bio(bio);
+
+  if (bio->fragmented == 100)
+    printk("Jonggyu: Breakpoint #3 in __submit_bio at F2FS");
 }
 
 static void __submit_merged_bio(struct f2fs_bio_info *io)
