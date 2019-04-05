@@ -2098,7 +2098,6 @@ get_rq:
     req->frag_list = prev_req;
     printk("Jonggyu: after generating all the split reqs// req->prev = %lu", req->frag_list);
     req->frag_num = ori_frag_num;
-    req = prev_req;
   }
 	plug = current->plug;
 
@@ -2480,9 +2479,6 @@ blk_qc_t generic_make_request(struct bio *bio)
           printk("Jonggyu: Breakpoint #4 in generic_make_request()");
 
 			while ((bio = bio_list_pop(&bio_list_on_stack[0])) != NULL)
-        if (fragmented == true)
-          printk("Jonggyu: Breakpoint #5 in generic_make_request()");
-
 				if (q == bio->bi_disk->queue)
 					bio_list_add(&same, bio);
 				else
@@ -2498,6 +2494,9 @@ blk_qc_t generic_make_request(struct bio *bio)
 			else
 				bio_io_error(bio);
 		}
+     if (fragmented == true)
+          printk("Jonggyu: Breakpoint #5 in generic_make_request()");
+    
 		bio = bio_list_pop(&bio_list_on_stack[0]);
 	} while (bio);
 	current->bio_list = NULL; /* deactivate */
