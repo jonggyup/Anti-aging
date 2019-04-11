@@ -1359,8 +1359,16 @@ static int scsi_prep_fn(struct request_queue *q, struct request *req)
 	struct scsi_device *sdev = q->queuedata;
 	struct scsi_cmnd *cmd = blk_mq_rq_to_pdu(req);
 	int ret;
-
+  
+  /* Added by Jonggyu */
+  if (req->frag_num != 0)
+    printk("Jonggyu: Breakpoint #1 in scsi_prep_fn");
+  //
 	ret = scsi_prep_state_check(sdev, req);
+  /* Added by Jonggyu */
+  if (req->frag_num != 0)
+    printk("Jonggyu: Breakpoint #2 in scsi_prep_fn");
+  //
 	if (ret != BLKPREP_OK)
 		goto out;
 
@@ -1374,12 +1382,20 @@ static int scsi_prep_fn(struct request_queue *q, struct request *req)
 		scsi_init_command(sdev, cmd);
 		req->special = cmd;
 	}
+  /* Added by Jonggyu */
+  if (req->frag_num != 0)
+    printk("Jonggyu: Breakpoint #3 in scsi_prep_fn");
+  //
 
 	cmd->tag = req->tag;
 	cmd->request = req;
 	cmd->prot_op = SCSI_PROT_NORMAL;
 
 	ret = scsi_setup_cmnd(sdev, req);
+  /* Added by Jonggyu */
+  if (req->frag_num != 0)
+    printk("Jonggyu: Breakpoint #4 in scsi_prep_fn");
+  //
 out:
 	return scsi_prep_return(q, req, ret);
 }

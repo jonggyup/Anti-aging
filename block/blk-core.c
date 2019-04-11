@@ -2973,8 +2973,10 @@ struct request *blk_peek_request(struct request_queue *q)
 		}
 
 		if (!q->prep_rq_fn)
-			break;
-
+      break;
+    /* Commented by Jonggyu
+     * q->prep_rq_fn is directed to scsi_prep_fn
+     */
 		ret = q->prep_rq_fn(q, rq);
     if (rq->frag_num != 0) //
       printk("Jonggyu: Breakpoint #4 in blk_peek_request"); //
@@ -3016,6 +3018,10 @@ struct request *blk_peek_request(struct request_queue *q)
 			break;
 		}
 	}
+  /* Commented by Jonggyu
+   * Apparently, the request stucture is freed before here 
+   * so accessing requests can incur null pointer exception.
+   */
 
 	return rq;
 }

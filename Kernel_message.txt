@@ -1,56 +1,60 @@
-[  381.168571] F2FS-fs (sda1): invalid crc value
-[  381.169942] F2FS-fs (sda1): Mounted with checkpoint version = 1
-[  385.585488] cache_flush.sh (3032): drop_caches: 3
-[  385.648867] Jonggyu: In f2fs_mpage_readpages
-[  385.648871] Jonggyu: last_block_in_bio = 4352 in f2fs/data.c
-[  385.648872] Jonggyu: last_block_in_bio = 4354 in f2fs/data.c
-[  385.648873] Jonggyu: last_block_in_bio = 4356 in f2fs/data.c
-[  385.648874] Jonggyu: last_block_in_bio #2 = 4358
-[  385.648874] Jonggyu: Breakpoint #1 in __submit_bio
-[  385.648875] Jonggyu: Breakpoint #2 in __submit_bio
-[  385.648875] Jonggyu: Breakpoint #2 in __submit_bio
-[  385.648875] Jonggyu: Breakpoint #2 in __submit_bio
-[  385.648876] Jonggyu: Breakpoint #1 in submit_bio
-[  385.648877] bio info = 18446612199663416832, bio_fragmented = 100, bi_vcnt = 1
-[  385.648877] Jonggyu: breakpoint #2 in submit_bio
-[  385.648878] Jonggyu: breakpoint #3 in submit_bio
-[  385.648879] bio info = 18446612199663417088, bio_fragmented = 100, bi_vcnt = 1
-[  385.648879] Jonggyu: Breakpoint #1 in submit_bio
-[  385.648879] bio info = 18446612199663417088, bio_fragmented = 100, bi_vcnt = 1
-[  385.648880] Jonggyu: breakpoint #2 in submit_bio
-[  385.648880] Jonggyu: breakpoint #3 in submit_bio
-[  385.648881] bio info = 18446612199663417344, bio_fragmented = 100, bi_vcnt = 1
-[  385.648881] Jonggyu: Breakpoint #1 in submit_bio
-[  385.648881] bio info = 18446612199663417344, bio_fragmented = 100, bi_vcnt = 1
-[  385.648882] Jonggyu: breakpoint #2 in submit_bio
-[  385.648882] Jonggyu: breakpoint #3 in submit_bio
-[  385.648883] bio info = 18446612199663416320, bio_fragmented = 100, bi_vcnt = 1
-[  385.648883] Jonggyu: Breakpoint #1 in submit_bio
-[  385.648883] bio info = 18446612199663416320, bio_fragmented = 100, bi_vcnt = 1
-[  385.648884] Jonggyu: Breakpoint #11
-[  385.648884] Jonggyu: Breakpoint #12
-[  385.648886] Jonggyu: Breakpoint #11: bio = 18446612199663417088
-[  385.648886] Jonggyu: fragmented req address = 18446612199413580800
-[  385.648887] Jonggyu: Breakpoint #11: bio = 18446612199663417344
-[  385.648887] Jonggyu: fragmented req address = 18446612199413607424
-[  385.648888] Jonggyu: Breakpoint #11: bio = 18446612199663416320
-[  385.648888] Jonggyu: fragmented req address = 18446612199413609472
-[  385.648889] Jonggyu: after generating all the split reqs// current req = 18446612199413610496 current bio = 18446612199663416320
-[  385.648890] Jonggyu: after generating all the split reqs// req->prev = 0
-[  385.648890] Jonggyu: Breakpoint #01// In plug
-[  385.648891] Jonggyu: Breakpoint #04// In plug
-[  385.648891] Jonggyu: BLK_END_MAKE_REQUST
-[  385.648891] Jonggyu: Breakpoint #1 in generic_make_request()
-[  385.648892] Jonggyu: Breakpoint #2 in generic_make_request()
-[  385.648892] Jonggyu: Breakpoint #3 in generic_make_request()
-[  385.648893] Jonggyu: Breakpoint #4 in generic_make_request()
-[  385.648893] Jonggyu: Breakpoint #5 in generic_make_request()
-[  385.648893] Jonggyu: Breakpoint #6 in generic_make_request()
-[  385.648894] Jonggyu: Breakpoint #3 in __submit_bio at F2FS
-[  385.648894] frag_num = 3 in noop
-[  385.648895] req address = 18446612199413580800
-[  385.648895] req address = 18446612199413607424
-[  385.648896] req address = 18446612199413609472
-[  385.648896] Jonggyu: Breakpoint #1 in blk_peek_request
-[  385.648896] Jonggyu: Breakpoint #2 in blk_peek_request
-[  385.648897] Jonggyu: Breakpoint #3 in blk_peek_request
+[  312.189951] F2FS-fs (sda1): invalid crc value
+[  312.191254] F2FS-fs (sda1): Mounted with checkpoint version = 1
+[  316.589866] cache_flush.sh (2912): drop_caches: 3
+[  316.661095] Jonggyu: In f2fs_mpage_readpages
+[  316.661099] Jonggyu: last_block_in_bio = 4352 in f2fs/data.c
+[  316.661100] Jonggyu: last_block_in_bio = 4354 in f2fs/data.c
+[  316.661101] Jonggyu: last_block_in_bio = 4357 in f2fs/data.c
+[  316.661102] Jonggyu: last_block_in_bio #2 = 4359
+[  316.661102] Jonggyu: Breakpoint #1 in __submit_bio
+[  316.661103] Jonggyu: Breakpoint #2 in __submit_bio
+[  316.661103] Jonggyu: Breakpoint #2 in __submit_bio
+[  316.661104] Jonggyu: Breakpoint #2 in __submit_bio
+[  316.661104] Jonggyu: Breakpoint #1 in submit_bio
+[  316.661105] bio info = 18446612199730565376, bio_fragmented = 100, bi_vcnt = 1
+[  316.661105] Jonggyu: breakpoint #2 in submit_bio
+[  316.661106] Jonggyu: breakpoint #3 in submit_bio
+[  316.661106] bio info = 18446612199730565888, bio_fragmented = 100, bi_vcnt = 1
+[  316.661107] Jonggyu: Breakpoint #1 in submit_bio
+[  316.661107] bio info = 18446612199730565888, bio_fragmented = 100, bi_vcnt = 1
+[  316.661108] Jonggyu: breakpoint #2 in submit_bio
+[  316.661108] Jonggyu: breakpoint #3 in submit_bio
+[  316.661108] bio info = 18446612199730561280, bio_fragmented = 100, bi_vcnt = 1
+[  316.661109] Jonggyu: Breakpoint #1 in submit_bio
+[  316.661109] bio info = 18446612199730561280, bio_fragmented = 100, bi_vcnt = 1
+[  316.661110] Jonggyu: breakpoint #2 in submit_bio
+[  316.661110] Jonggyu: breakpoint #3 in submit_bio
+[  316.661110] bio info = 18446612199730566912, bio_fragmented = 100, bi_vcnt = 1
+[  316.661111] Jonggyu: Breakpoint #1 in submit_bio
+[  316.661111] bio info = 18446612199730566912, bio_fragmented = 100, bi_vcnt = 1
+[  316.661112] Jonggyu: Breakpoint #11
+[  316.661112] Jonggyu: Breakpoint #12
+[  316.661114] Jonggyu: Breakpoint #11: bio = 18446612199730565888
+[  316.661114] Jonggyu: fragmented req address = 18446612199742808064
+[  316.661115] Jonggyu: Breakpoint #11: bio = 18446612199730561280
+[  316.661115] Jonggyu: fragmented req address = 18446612199742804992
+[  316.661116] Jonggyu: Breakpoint #11: bio = 18446612199730566912
+[  316.661116] Jonggyu: fragmented req address = 18446612199742831616
+[  316.661117] Jonggyu: after generating all the split reqs// current req = 18446612199742803968 current bio = 18446612199730566912
+[  316.661118] Jonggyu: after generating all the split reqs// req->prev = 0
+[  316.661118] Jonggyu: Breakpoint #01// In plug
+[  316.661118] Jonggyu: Breakpoint #04// In plug
+[  316.661119] Jonggyu: BLK_END_MAKE_REQUST
+[  316.661119] Jonggyu: Breakpoint #1 in generic_make_request()
+[  316.661119] Jonggyu: Breakpoint #2 in generic_make_request()
+[  316.661120] Jonggyu: Breakpoint #3 in generic_make_request()
+[  316.661120] Jonggyu: Breakpoint #4 in generic_make_request()
+[  316.661121] Jonggyu: Breakpoint #5 in generic_make_request()
+[  316.661121] Jonggyu: Breakpoint #6 in generic_make_request()
+[  316.661121] Jonggyu: Breakpoint #3 in __submit_bio at F2FS
+[  316.661122] frag_num = 3 in noop
+[  316.661123] req address = 18446612199742808064
+[  316.661123] req address = 18446612199742804992
+[  316.661124] req address = 18446612199742831616
+[  316.661124] Jonggyu: Breakpoint #1 in blk_peek_request
+[  316.661124] Jonggyu: Breakpoint #2 in blk_peek_request
+[  316.661125] Jonggyu: Breakpoint #3 in blk_peek_request
+[  316.661125] Jonggyu: Breakpoint #1 in scsi_prep_fn
+[  316.661125] Jonggyu: Breakpoint #2 in scsi_prep_fn
+[  316.661126] Jonggyu: Breakpoint #3 in scsi_prep_fn
+[  316.661127] Jonggyu: Breakpoint #4 in scsi_prep_fn
