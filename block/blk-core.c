@@ -2920,7 +2920,7 @@ struct request *blk_peek_request(struct request_queue *q)
 {
 	struct request *rq;
 	int ret;
-  int fragmented; // Added by Jonggyu to indicate if the io is fragmented or not.
+  int fragmented = 0; // Added by Jonggyu to indicate if the io is fragmented or not.
 
 	lockdep_assert_held(q->queue_lock);
 	WARN_ON_ONCE(q->mq_ops);
