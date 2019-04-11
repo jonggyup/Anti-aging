@@ -2920,12 +2920,15 @@ struct request *blk_peek_request(struct request_queue *q)
 {
 	struct request *rq;
 	int ret;
+  int fragmented; // Added by Jonggyu to indicate if the io is fragmented or not.
 
 	lockdep_assert_held(q->queue_lock);
 	WARN_ON_ONCE(q->mq_ops);
 
 	while ((rq = elv_next_request(q)) != NULL) {
+    fragmented = rq->frag_num;
 		if (!(rq->rq_flags & RQF_STARTED)) {
+      
 			/*
 			 * This is the first time the device driver
 			 * sees this request (possibly after
@@ -2984,6 +2987,9 @@ struct request *blk_peek_request(struct request_queue *q)
 		if (ret == BLKPREP_OK) {
 			break;
 		} else if (ret == BLKPREP_DEFER) {
+       if (rq->frag_num != 0) //
+        printk("Jonggyu: Breakpoint #5 in blk_peek_request"); //
+
 			/*
 			 * the request may have been (partially) prepped.
 			 * we need to keep this request in the front to
@@ -3009,7 +3015,7 @@ struct request *blk_peek_request(struct request_queue *q)
 			 */
 			blk_start_request(rq);
       if (rq->frag_num != 0) //
-        printk("Jonggyu: Breakpoint #5 in blk_peek_request"); //
+        printk("Jonggyu: Breakpoint #6 in blk_peek_request"); //
 
 			__blk_end_request_all(rq, ret == BLKPREP_INVALID ?
 					BLK_STS_TARGET : BLK_STS_IOERR);
@@ -3022,6 +3028,8 @@ struct request *blk_peek_request(struct request_queue *q)
    * Apparently, the request stucture is freed before here 
    * so accessing requests can incur null pointer exception.
    */
+  if(fragmented > 0) //
+        printk("Jonggyu: Breakpoint #7 in blk_peek_request"); //
 
 	return rq;
 }
