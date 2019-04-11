@@ -1925,6 +1925,7 @@ static blk_qc_t blk_queue_bio(struct request_queue *q, struct bio *bio)
   bool fragmented = false;
   int frag_num = bio->frag_num;
   int ori_frag_num = frag_num;
+  struct request *ori_req;
   
   /*
    * low level driver can indicate that it wants pages above a
@@ -1934,7 +1935,6 @@ static blk_qc_t blk_queue_bio(struct request_queue *q, struct bio *bio)
 
   /* Iterative behavior from here, when fragmented bio is detected 
    */
-new:
 //
   blk_queue_bounce(q, &bio);
 
@@ -2001,19 +2001,24 @@ new:
 //
 
 get_rq:
+  /* Commented by Jonggyu 
+   * Insdie wbt_wait, there is spin_unlock_irq and spin_lock_irq for q->queue_lock 
+   */
 	wb_acct = wbt_wait(q->rq_wb, bio, q->queue_lock);
 //
-  if (fragmented == true || bio->fragmented == 100) {
-    printk("Jonggyu: Breakpoint #7");
-  }
+//  if (fragmented == true || bio->fragmented == 100) {
+//    printk("Jonggyu: Breakpoint #7");
+//  }
 //
 	/*
 	 * Grab a free request. This is might sleep but can not fail.
 	 * Returns with the queue unlocked.
 	 */
+
   if (fragmented == false)
   	blk_queue_enter_live(q);
 
+new:
 //  printk("Jonggyu: Breakpoint #6");
 //  printk("Parameter info: q = %lu, bio->bi_opf = %lu, bio = %lu", q, bio->bi_opf, bio);
 //  printk("Parameter info printed successfully");
@@ -2035,9 +2040,9 @@ get_rq:
 		goto out_unlock;
 	}
 
-  if (fragmented == true || bio->fragmented == 100) {
-    printk("Jonggyu: Breakpoint #9");
-  }
+//  if (fragmented == true || bio->fragmented == 100) {
+//    printk("Jonggyu: Breakpoint #9");
+//  }
 
   if (bio->frag_list == NULL)
   	wbt_track(&req->issue_stat, wb_acct);
@@ -2052,23 +2057,29 @@ get_rq:
 //  printk("Jonggyu: Breakpoint #9");
   blk_init_request_from_bio(req, bio);
 //  printk("Jonggyu: Breakpoint #10");
-  if (fragmented == true || bio->fragmented == 100) {
-    printk("Jonggyu: Breakpoint #10");
-  }
+//  if (fragmented == true || bio->fragmented == 100) {
+//    printk("Jonggyu: Breakpoint #10");
+//  }
 
   if (test_bit(QUEUE_FLAG_SAME_COMP, &q->queue_flags))
     req->cpu = raw_smp_processor_id();
 
   /* Added by Jonggyu */
+  if (fragmented != true)
+    ori_req = req;
+
   if (bio && bio->fragmented == 100 && bio->frag_list != NULL)
   {
-    printk("Jonggyu: Breakpoint #10");
+//    printk("Jonggyu: Breakpoint #10");
     bio = bio->frag_list;
     printk("Jonggyu: Breakpoint #11: bio = %lu", bio);
-    req->frag_list = prev_req;
-    printk("Jonggyu: Breakpoint #12");
+    if (fragmented == true) {
+      prev_req->frag_list = req;
+    }
+    //req->frag_list = prev_req;
+//    printk("Jonggyu: Breakpoint #12");
     prev_req = req;
-    printk("Jonggyu: Breakpoint #13");
+//    printk("Jonggyu: Breakpoint #13");
     fragmented = true;
     printk("Jonggyu: fragmented req address = %lu", req);
 
@@ -2095,8 +2106,10 @@ get_rq:
   if (fragmented == true)
   {
     printk("Jonggyu: after generating all the split reqs// current req = %lu current bio = %lu", req, bio);
-    req->frag_list = prev_req;
+//    req->frag_list = prev_req;
+    prev_req->frag_list = NULL;
     printk("Jonggyu: after generating all the split reqs// req->prev = %lu", req->frag_list);
+    req = ori_req;
     req->frag_num = ori_frag_num;
   }
 	plug = current->plug;
@@ -2135,7 +2148,6 @@ get_rq:
 		blk_account_io_start(req, true);
     if (fragmented == true)
       printk("Jonggyu: Breakpoint #04// In plug");
-
 
 	} else {
 		spin_lock_irq(q->queue_lock);
@@ -2919,8 +2931,15 @@ struct request *blk_peek_request(struct request_queue *q)
 			 * sees this request (possibly after
 			 * requeueing).  Notify IO scheduler.
 			 */
+      if (rq->frag_num != 0) //
+        printk("Jonggyu: Breakpoint #1 in blk_peek_request"); //
+
 			if (rq->rq_flags & RQF_SORTED)
 				elv_activate_rq(q, rq);
+
+      if (rq->frag_num != 0) //
+        printk("Jonggyu: Breakpoint #2 in blk_peek_request"); //
+
 
 			/*
 			 * just mark as started even if we don't start
@@ -2935,6 +2954,10 @@ struct request *blk_peek_request(struct request_queue *q)
 			q->end_sector = rq_end_sector(rq);
 			q->boundary_rq = NULL;
 		}
+
+    if (rq->frag_num != 0) //
+      printk("Jonggyu: Breakpoint #3 in blk_peek_request"); //
+
 
 		if (rq->rq_flags & RQF_DONTPREP)
 			break;
@@ -2953,6 +2976,9 @@ struct request *blk_peek_request(struct request_queue *q)
 			break;
 
 		ret = q->prep_rq_fn(q, rq);
+    if (rq->frag_num != 0) //
+      printk("Jonggyu: Breakpoint #4 in blk_peek_request"); //
+
 		if (ret == BLKPREP_OK) {
 			break;
 		} else if (ret == BLKPREP_DEFER) {
@@ -2980,6 +3006,9 @@ struct request *blk_peek_request(struct request_queue *q)
 			 * any debug logic in the end I/O path.
 			 */
 			blk_start_request(rq);
+      if (rq->frag_num != 0) //
+        printk("Jonggyu: Breakpoint #5 in blk_peek_request"); //
+
 			__blk_end_request_all(rq, ret == BLKPREP_INVALID ?
 					BLK_STS_TARGET : BLK_STS_IOERR);
 		} else {

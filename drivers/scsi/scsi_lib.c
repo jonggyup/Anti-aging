@@ -1351,7 +1351,9 @@ scsi_prep_return(struct request_queue *q, struct request *req, int ret)
 
 	return ret;
 }
-
+/* Commented by Jonggyu
+ * this func seems to be connecteed to q->prep_rq_fn in blk_peek_request 
+ */
 static int scsi_prep_fn(struct request_queue *q, struct request *req)
 {
 	struct scsi_device *sdev = q->queuedata;

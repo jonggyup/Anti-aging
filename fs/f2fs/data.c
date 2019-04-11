@@ -1321,7 +1321,7 @@ submit_and_realloc:
       fragmented = true;
       prev = bio;
       bio = NULL;
-      printk("Jonggyu: Fragmentation is detected in f2fs/data.c");
+      printk("Jonggyu: last_block_in_bio = %u in f2fs/data.c",last_block_in_bio);
     }
 
     if (bio && !__same_bdev(F2FS_I_SB(inode), block_nr, bio)) {
@@ -1383,6 +1383,7 @@ next_page:
     if (fragmented == true) { //
       bio->fragmented = 100; //
       bio->frag_num = frag_num;
+      printk("Jonggyu: last_block_in_bio #2 = %u", last_block_in_bio);
     }
     prev = NULL; //
     fragmented = false; //

@@ -396,13 +396,19 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
 	sector_t boundary;
 	struct list_head *entry;
 
+  if (rq->frag_num != 1000) { //
+
 	if (q->last_merge == rq)
 		q->last_merge = NULL;
+  
+  /* If the request is not fragmented or not the first one,
+   * skip this process*/
 
-	elv_rqhash_del(q, rq);
+  	elv_rqhash_del(q, rq);
 
-	q->nr_sorted--;
-
+  	q->nr_sorted--;
+  } //
+  
 	boundary = q->end_sector;
 	list_for_each_prev(entry, &q->queue_head) {
 		struct request *pos = list_entry_rq(entry);
@@ -423,7 +429,7 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
 		if (blk_rq_pos(rq) >= blk_rq_pos(pos))
 			break;
 	}
-
+  
 	list_add(&rq->queuelist, entry);
 }
 EXPORT_SYMBOL(elv_dispatch_sort);
