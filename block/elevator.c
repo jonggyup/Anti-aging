@@ -429,10 +429,11 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
 		if (blk_rq_pos(rq) >= blk_rq_pos(pos))
 			break;
 	}
-//  while (rq) {
+  while (rq) {
   	list_add(&rq->queuelist, entry);
-//    rq = rq->frag_list;
-//  }
+    rq = rq->frag_list;
+    list_del_init(&rq-<queuelist);
+  }
 }
 EXPORT_SYMBOL(elv_dispatch_sort);
 
