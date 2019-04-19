@@ -34,6 +34,7 @@ static int noop_dispatch(struct request_queue *q, int force)
       while (frag_num >= 1 && rq->frag_list != NULL){
         printk("frag_num = %d in noop", frag_num);
         rq = rq->frag_list;
+        list_del_init(&rq->queuelist);
         rq->frag_num = 1000;
         printk("req address = %lu", rq);
         printk("Jonggyu: Breakpoint #2 in noop-iosched.c/noop_dispatch");    
