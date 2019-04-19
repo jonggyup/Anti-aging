@@ -1925,7 +1925,7 @@ static blk_qc_t blk_queue_bio(struct request_queue *q, struct bio *bio)
   bool fragmented = false;
   int frag_num = bio->frag_num;
   int ori_frag_num = frag_num;
-  struct request *ori_req;
+  struct request *ori_req, *iter_req;
   
   /*
    * low level driver can indicate that it wants pages above a
@@ -2015,8 +2015,7 @@ get_rq:
 	 * Returns with the queue unlocked.
 	 */
 
-  if (fragmented == false)
-  	blk_queue_enter_live(q);
+ 	blk_queue_enter_live(q);
 
 new:
 //  printk("Jonggyu: Breakpoint #6");
@@ -2044,7 +2043,7 @@ new:
 //    printk("Jonggyu: Breakpoint #9");
 //  }
 
-  if (bio->frag_list == NULL)
+//  if (bio->frag_list == NULL)
   	wbt_track(&req->issue_stat, wb_acct);
 
 //  printk("Jonggyu: Breakpoint #8");
@@ -2072,7 +2071,7 @@ new:
   {
 //    printk("Jonggyu: Breakpoint #10");
     bio = bio->frag_list;
-    printk("Jonggyu: Breakpoint #11: bio = %lu", bio);
+//    printk("Jonggyu: Breakpoint #11: bio = %lu", bio);
     if (fragmented == true) {
       prev_req->frag_list = req;
     }
@@ -2081,7 +2080,7 @@ new:
     prev_req = req;
 //    printk("Jonggyu: Breakpoint #13");
     fragmented = true;
-    printk("Jonggyu: fragmented req address = %lu", req);
+//    printk("Jonggyu: fragmented req address = %lu", req);
 
     goto new;
   }
@@ -2105,13 +2104,20 @@ new:
 
   if (fragmented == true)
   {
-    printk("Jonggyu: after generating all the split reqs// current req = %lu current bio = %lu", req, bio);
+//    printk("Jonggyu: after generating all the split reqs// current req = %lu current bio = %lu", req, bio);
 //    req->frag_list = prev_req;
-    prev_req->frag_list = NULL;
-    printk("Jonggyu: after generating all the split reqs// req->prev = %lu", req->frag_list);
-    req = ori_req;
+    req->frag_list = NULL;
+    prev_req->frag_list = req;
+    req = ori_req -> frag_list;
+    printk("Jonggyu: req = %lu", req);
     req->frag_num = ori_frag_num;
   }
+  iter_req = req;
+  while ((iter_req = iter_req->frag_list)!=NULL)
+  {
+    printk("Jonggyu: req = %lu", iter_req);
+  }
+
 	plug = current->plug;
 
 	if (plug) {

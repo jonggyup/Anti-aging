@@ -429,8 +429,9 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
 		if (blk_rq_pos(rq) >= blk_rq_pos(pos))
 			break;
 	}
-  
-	list_add(&rq->queuelist, entry);
+  if (rq->frag_num != 1000) {
+  	list_add(&rq->queuelist, entry);
+  }
 }
 EXPORT_SYMBOL(elv_dispatch_sort);
 
