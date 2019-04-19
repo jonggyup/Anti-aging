@@ -2108,7 +2108,7 @@ new:
 //    req->frag_list = prev_req;
     req->frag_list = NULL;
     prev_req->frag_list = req;
-    req = ori_req -> frag_list;
+    req = ori_req;
     printk("Jonggyu: req = %lu", req);
     req->frag_num = ori_frag_num;
   }
@@ -2875,6 +2875,9 @@ static struct request *elv_next_request(struct request_queue *q)
 	WARN_ON_ONCE(q->mq_ops);
 
 	while (1) {
+    /* Commented by Jonggyu
+     * Iterating dispatch queue
+     */
 		list_for_each_entry(rq, &q->queue_head, queuelist) {
 			if (blk_pm_allow_request(rq))
 				return rq;

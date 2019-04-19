@@ -1,0 +1,7 @@
+19/Apr./2019----
+In block/elevator.c, list_add(&rq->queuelist, entry) incurs Kerenl panic.
+1. Adding the same request twice to the list 
+2. Adding one of the fragmented request 
+does not incur Kernel panic.
+However, adding multiple different requests to the list incurs Kernel panic.
+
