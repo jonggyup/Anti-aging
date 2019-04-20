@@ -430,13 +430,16 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
 			break;
 	}
 
-  list_add(&rq->queuelist, entry);
+//  list_add(&rq->queuelist, entry);
 /* 
  * Added by Jonggyu
- */
+*/
   if (rq->frag_list != NULL) {
-      list_add(&rq->queuelist, entry);
+    list_del_init(&rq->frag_list->queuelist);
+    list_add(&(rq->frag_list->queuelist), entry);
   }
+  else
+    list_add(&rq->queuelist, entry);
 }
 EXPORT_SYMBOL(elv_dispatch_sort);
 
