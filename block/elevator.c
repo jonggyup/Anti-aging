@@ -433,8 +433,11 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
  * Added by Jonggyu
 */
   if (rq->frag_list != NULL) {
-    list_del_init(&rq->frag_list->queuelist);
-    list_add(&(rq->frag_list->queuelist), entry);
+    while((rq = rq->frag_list)!=NULL){
+      printk("Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists");
+      list_del_init(&rq->queuelist);
+      list_add(&rq->queuelist, entry);
+    }
   }
   else
     list_add(&rq->queuelist, entry);
