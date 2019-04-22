@@ -1227,7 +1227,7 @@ static int f2fs_mpage_readpages(struct address_space *mapping,
 	map.m_flags = 0;
 	map.m_next_pgofs = NULL;
 
-  printk ("Jonggyu: In f2fs_mpage_readpages");
+//  printk ("Jonggyu: In f2fs_mpage_readpages");
 
 	for (page_idx = 0; nr_pages; page_idx++, nr_pages--) {
 

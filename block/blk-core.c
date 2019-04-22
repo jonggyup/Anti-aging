@@ -1349,8 +1349,8 @@ static struct request *__get_request(struct request_list *rl, unsigned int op,
 //  printk ("Jonggyu: Breakpoint #123");
 		rq->elv.icq = icq;
 		if (unlikely(elv_set_request(q, rq, bio, gfp_mask))){
-      if (bio->fragmented == 100) //
-        printk("Jonggyu: Breakpoint #1 in __get_request// failed to elv_set_request");//
+//      if (bio->fragmented == 100) //
+//        printk("Jonggyu: Breakpoint #1 in __get_request// failed to elv_set_request");//
 			goto fail_elvpriv;
     }
 
@@ -2525,7 +2525,7 @@ again:
 //    printk("Jonggyu: breakpoint #2 in submit_bio");
     bio = bio->frag_list;
 //    printk("Jonggyu: breakpoint #3 in submit_bio");
-    printk("bio info = %lu, bio_fragmented = %d, bi_vcnt = %d", bio, bio->fragmented, bio->bi_vcnt);
+//    printk("bio info = %lu, bio_fragmented = %d, bi_vcnt = %d", bio, bio->fragmented, bio->bi_vcnt);
     goto again;
   }
   bio = orig;
