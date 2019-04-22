@@ -434,11 +434,11 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
 /* 
  * Added by Jonggyu
 */
-  if (rq->frag_list != NULL) {
+/*  if (rq->frag_list != NULL) {
     list_del_init(&rq->frag_list->queuelist);
     list_add(&(rq->frag_list->queuelist), entry);
   }
-  else
+  else*/
     list_add(&rq->queuelist, entry);
 }
 EXPORT_SYMBOL(elv_dispatch_sort);

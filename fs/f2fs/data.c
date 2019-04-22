@@ -228,15 +228,6 @@ static inline void __submit_bio(struct f2fs_sb_info *sbi,
 submit_io:
   if (is_read_io(bio_op(bio))){
     trace_f2fs_submit_read_bio(sbi->sb, type, bio);
-    if (bio->fragmented == 100 && bio->frag_list != NULL)//
-    {//
-      printk("Jonggyu: Breakpoint #1 in __submit_bio");
-      while ((bio=bio->frag_list) != NULL)//
-      {//
-        printk("Jonggyu: Breakpoint #2 in __submit_bio");
-        trace_f2fs_submit_read_bio(sbi->sb, type, bio);//
-      }//
-    }//
     bio = orig;//
   }
 	else
