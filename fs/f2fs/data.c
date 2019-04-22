@@ -234,8 +234,8 @@ submit_io:
 		trace_f2fs_submit_write_bio(sbi->sb, type, bio);
 	submit_bio(bio);
 
-  if (bio->fragmented == 100)
-    printk("Jonggyu: Breakpoint #3 in __submit_bio at F2FS");
+//  if (bio->fragmented == 100)
+//    printk("Jonggyu: Breakpoint #3 in __submit_bio at F2FS");
 }
 
 static void __submit_merged_bio(struct f2fs_bio_info *io)
@@ -1312,7 +1312,7 @@ submit_and_realloc:
       fragmented = true;
       prev = bio;
       bio = NULL;
-      printk("Jonggyu: last_block_in_bio = %lu in f2fs/data.c",last_block_in_bio);
+//      printk("Jonggyu: last_block_in_bio = %lu in f2fs/data.c",last_block_in_bio);
     }
 
     if (bio && !__same_bdev(F2FS_I_SB(inode), block_nr, bio)) {
@@ -1329,7 +1329,7 @@ submit_and_realloc:
 		if (bio == NULL) {
 			bio = f2fs_grab_read_bio(inode, block_nr, nr_pages);
 			if (IS_ERR(bio)) {
-        printk("Jonggyu: bio creation error in f2fs_read");
+//        printk("Jonggyu: bio creation error in f2fs_read");
 				bio = NULL; //
         prev = NULL; //
         fragmented = false; //
@@ -1374,7 +1374,7 @@ next_page:
     if (fragmented == true) { //
       bio->fragmented = 100; //
       bio->frag_num = frag_num;
-      printk("Jonggyu: last_block_in_bio #2 = %lu", last_block_in_bio);
+//      printk("Jonggyu: last_block_in_bio #2 = %lu", last_block_in_bio);
     }
     prev = NULL; //
     fragmented = false; //
@@ -1389,8 +1389,8 @@ next_page:
     //
     __submit_bio(F2FS_I_SB(inode), bio, DATA);
   }
-  if (fragmented == true)
-    printk("Jonggyu: End I/Os at f2fs/data.c");
+//  if (fragmented == true)
+//    printk("Jonggyu: End I/Os at f2fs/data.c");
   return 0;
 }
 

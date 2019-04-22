@@ -1361,13 +1361,13 @@ static int scsi_prep_fn(struct request_queue *q, struct request *req)
 	int ret;
   
   /* Added by Jonggyu */
-  if (req->frag_num != 0)
-    printk("Jonggyu: Breakpoint #1 in scsi_prep_fn");
+//  if (req->frag_num != 0)
+//    printk("Jonggyu: Breakpoint #1 in scsi_prep_fn");
   //
 	ret = scsi_prep_state_check(sdev, req);
   /* Added by Jonggyu */
-  if (req->frag_num != 0)
-    printk("Jonggyu: Breakpoint #2 in scsi_prep_fn");
+//  if (req->frag_num != 0)
+//    printk("Jonggyu: Breakpoint #2 in scsi_prep_fn");
   //
 	if (ret != BLKPREP_OK)
 		goto out;
@@ -1383,8 +1383,8 @@ static int scsi_prep_fn(struct request_queue *q, struct request *req)
 		req->special = cmd;
 	}
   /* Added by Jonggyu */
-  if (req->frag_num != 0)
-    printk("Jonggyu: Breakpoint #3 in scsi_prep_fn");
+//  if (req->frag_num != 0)
+//    printk("Jonggyu: Breakpoint #3 in scsi_prep_fn");
   //
 
 	cmd->tag = req->tag;
@@ -1393,8 +1393,8 @@ static int scsi_prep_fn(struct request_queue *q, struct request *req)
 
 	ret = scsi_setup_cmnd(sdev, req);
   /* Added by Jonggyu */
-  if (req->frag_num != 0)
-    printk("Jonggyu: Breakpoint #4 in scsi_prep_fn");
+//  if (req->frag_num != 0)
+//    printk("Jonggyu: Breakpoint #4 in scsi_prep_fn");
   //
 out:
 	return scsi_prep_return(q, req, ret);
