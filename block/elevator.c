@@ -396,7 +396,6 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
 	sector_t boundary;
 	struct list_head *entry;
 
-  if (rq->frag_num != 1000) { //
 
 	if (q->last_merge == rq)
 		q->last_merge = NULL;
@@ -407,7 +406,6 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
   	elv_rqhash_del(q, rq);
 
   	q->nr_sorted--;
-  } //
   
 	boundary = q->end_sector;
 	list_for_each_prev(entry, &q->queue_head) {
@@ -434,11 +432,11 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
 /* 
  * Added by Jonggyu
 */
-/*  if (rq->frag_list != NULL) {
+  if (rq->frag_list != NULL) {
     list_del_init(&rq->frag_list->queuelist);
     list_add(&(rq->frag_list->queuelist), entry);
   }
-  else*/
+  else
     list_add(&rq->queuelist, entry);
 }
 EXPORT_SYMBOL(elv_dispatch_sort);
