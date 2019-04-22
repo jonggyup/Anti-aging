@@ -2029,16 +2029,25 @@ new:
 	 */
   blk_init_request_from_bio(req, bio);
 
+  if (fragmented != true)
+    ori_req = req;
+
   if (test_bit(QUEUE_FLAG_SAME_COMP, &q->queue_flags))
     req->cpu = raw_smp_processor_id();
 
   if (bio && bio->fragmented == 100 && bio->frag_list != NULL)
   {
     bio = bio->frag_list;
+    req->frag_num = ori_frag_num;
 		blk_account_io_start(req, true);
+    if (fragmented == true) {
+      prev_req->frag_list = req;
+    }
+    prev_req = req;
     fragmented = true;
     goto new;
   }
+  req = ori_req;
 
 
 	plug = current->plug;
@@ -2404,8 +2413,8 @@ blk_qc_t generic_make_request(struct bio *bio)
 
 			blk_queue_exit(q);
 
-//      if (bio->fragmented == 100)
-//        printk("Jonggyu: Breakpoint #2 in generic_make_request()");
+      if (bio->fragmented == 100)
+        printk("Jonggyu: Breakpoint #2 in generic_make_request()");
 
 			/* sort new bios into those for a lower level
 			 * and those for the same level

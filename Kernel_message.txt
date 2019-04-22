@@ -1,7 +1,252 @@
-[  141.009202] F2FS-fs (sda1): invalid crc value
-[  141.110250] F2FS-fs (sda1): Mounted with checkpoint version = 1
-[  214.638810] cache_flush.sh (5169): drop_caches: 3
-[  215.260742] Jonggyu: Breakpoint #01// In plug
-[  215.260744] Jonggyu: Breakpoint #04// In plug
-[  215.260745] Jonggyu: BLK_END_MAKE_REQUEST
-[  215.260746] Jonggyu: Breakpoint #1 in generic_make_request()
+[  188.585148] F2FS-fs (sda1): invalid crc value
+[  188.689437] F2FS-fs (sda1): Mounted with checkpoint version = 1
+[  262.020635] cache_flush.sh (5097): drop_caches: 3
+[  262.569259] Jonggyu: Breakpoint #01// In plug
+[  262.569261] Jonggyu: Breakpoint #04// In plug
+[  262.569263] Jonggyu: BLK_END_MAKE_REQUEST
+[  262.569264] Jonggyu: Breakpoint #1 in generic_make_request()
+[  262.569265] Jonggyu: Breakpoint #2 in generic_make_request()
+[  262.569266] Jonggyu: Breakpoint #END in generic_make_request()
+[  262.569269] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569270] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569270] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569271] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569272] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569273] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569274] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569274] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569275] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569276] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569277] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569278] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569278] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569279] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569280] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569281] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569282] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569283] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569283] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569284] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569285] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569286] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569287] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569287] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569288] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569289] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569290] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569291] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569291] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569292] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569293] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569294] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569295] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569295] Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists
+[  262.569296] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569297] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569298] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569302] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569303] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569303] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569309] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569310] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569310] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569312] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569313] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569313] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569316] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569316] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569317] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569318] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569319] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569320] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569322] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569323] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569324] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569325] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569326] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569327] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569328] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569329] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569330] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569332] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569332] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569333] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569335] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569336] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569337] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569338] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569339] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569339] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569341] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569342] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569343] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569344] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569345] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569346] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569347] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569348] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569349] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569350] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569351] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569351] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569353] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569354] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569355] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569356] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569357] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569358] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569359] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569360] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569361] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569362] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569363] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569364] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569365] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569366] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569367] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569368] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569369] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569370] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569372] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569372] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569373] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569374] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569375] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569376] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569378] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569378] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569379] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569380] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569381] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569382] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569384] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569384] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569385] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569386] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569387] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569388] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569390] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569391] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569392] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569393] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569394] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569394] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569397] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569397] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569398] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569400] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569400] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569401] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569403] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569404] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569405] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569406] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569407] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569408] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569410] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569411] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569412] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569413] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569414] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569415] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569417] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569417] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569418] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569419] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569420] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569421] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569423] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569423] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569424] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569425] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569426] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569427] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569429] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569429] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569430] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569431] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569432] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569433] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569435] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569435] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569436] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569437] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569438] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569439] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569441] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569441] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569442] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569444] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569444] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569445] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569447] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569448] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569448] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569450] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569450] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569451] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569453] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569454] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569454] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569456] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569456] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569457] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569459] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569460] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569460] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569462] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569462] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569463] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569465] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569466] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569466] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569468] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569468] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569469] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569486] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569486] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569487] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569488] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569489] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569490] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569492] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569493] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569493] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569495] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569495] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569496] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569498] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569499] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569499] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569501] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569501] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569502] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569509] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569509] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569510] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569511] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569512] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569513] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569515] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569516] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569516] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569518] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569519] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569520] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569521] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569522] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569523] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569524] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569525] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569526] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569529] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569530] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569531] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569533] Jonggyu: Breakpoint #1 in blk_peek_request
+[  262.569533] Jonggyu: Breakpoint #2 in blk_peek_request
+[  262.569534] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569536] Jonggyu: Breakpoint #4 in blk_peek_request
+[  262.569537] Jonggyu: Breakpoint #7 in blk_peek_request
+[  262.569537] Jonggyu: Breakpoint #END in blk_peek_request
+[  262.569547] Jonggyu: Breakpoint #3 in blk_peek_request
+[  262.569548] Jonggyu: Breakpoint #7 in blk_peek_request
