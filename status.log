@@ -4,4 +4,5 @@ In block/elevator.c, list_add(&rq->queuelist, entry) incurs Kerenl panic.
 2. Adding one of the fragmented request 
 does not incur Kernel panic.
 However, adding multiple different requests to the list incurs Kernel panic.
+Also, changing to the next fragmented request in elv_dispatch_reqeust() also incurs Kernel panic.
 

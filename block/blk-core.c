@@ -1932,6 +1932,9 @@ static blk_qc_t blk_queue_bio(struct request_queue *q, struct bio *bio)
    * certain limit bounced to low memory (ie for highmem, or even
    * ISA dma in theory)
    */
+
+new:
+
   blk_queue_bounce(q, &bio);
 
   if (bio->fragmented != 100)
@@ -1985,18 +1988,18 @@ static blk_qc_t blk_queue_bio(struct request_queue *q, struct bio *bio)
 
 get_rq:
   /* Commented by Jonggyu 
-   * Insdie wbt_wait, there is spin_unlock_irq and spin_lock_irq for q->queue_lock 
+   * Inside wbt_wait, there is spin_unlock_irq and spin_lock_irq for q->queue_lock 
    */
 	wb_acct = wbt_wait(q->rq_wb, bio, q->queue_lock);
 	/*
 	 * Grab a free request. This is might sleep but can not fail.
 	 * Returns with the queue unlocked.
 	 */
+  if (fragmented == false)
+   	blk_queue_enter_live(q);
 
- 	blk_queue_enter_live(q);
-
-new:
-	req = get_request(q, bio->bi_opf, bio, 0);
+ 
+  req = get_request(q, bio->bi_opf, bio, 0);
 
   if (IS_ERR(req)) {
 		blk_queue_exit(q);
