@@ -2035,7 +2035,7 @@ new:
 
   if (test_bit(QUEUE_FLAG_SAME_COMP, &q->queue_flags))
     req->cpu = raw_smp_processor_id();
-/*
+
   if (bio && bio->fragmented == 100 && bio->frag_list != NULL)
   {
     bio = bio->frag_list;
@@ -2058,7 +2058,7 @@ new:
   }
   req = ori_req;
 
-*/
+
 	plug = current->plug;
 
 	if (plug) {
@@ -2105,14 +2105,14 @@ new:
 out_unlock:
 		spin_unlock_irq(q->queue_lock);
 	}
-
+/*
   if (bio && bio->fragmented == 100 && bio->frag_list != NULL)
   {
     bio = bio->frag_list;
     req->frag_num = ori_frag_num;
     fragmented = true;
     goto new;
-  }
+  }*/
 
    if(fragmented == true)
     printk("Jonggyu: BLK_END_MAKE_REQUEST");

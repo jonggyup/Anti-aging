@@ -433,7 +433,7 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
 /* 
  * Added by Jonggyu
 */
-/*  if (rq->frag_list != NULL) {
+  if (rq->frag_list != NULL) {
     while(rq != NULL){
       i++;
       printk("Breakpoint: Jonggyu// in elevator.c/#%d: Request Address = %lu", i, rq);
@@ -444,7 +444,7 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
       rq = rq->frag_list;
     }
   }
-  else*/
+  else
     list_add(&rq->queuelist, entry);
 }
 EXPORT_SYMBOL(elv_dispatch_sort);
