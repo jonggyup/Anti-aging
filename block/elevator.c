@@ -438,6 +438,7 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
       i++;
       printk("Breakpoint: Jonggyu// in elevator.c/#%d: Request Address = %lu", i, rq);
       list_del_init(&rq->queuelist);
+	  	rq->rq_flags |= RQF_SORTED;
       rq->q = q;
       list_add(&rq->queuelist, entry);
       rq = rq->frag_list;

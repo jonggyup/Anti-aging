@@ -158,6 +158,9 @@ do_local:
  **/
 void blk_complete_request(struct request *req)
 {
+  /* Added by Jonggyu */
+  if (req->frag_num != 0)
+    printk("Jonggyu: in blk_complete_request, req addr = %lu", req);
 	if (unlikely(blk_should_fake_timeout(req->q)))
 		return;
 	if (!blk_mark_rq_complete(req))

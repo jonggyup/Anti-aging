@@ -2930,7 +2930,7 @@ struct request *blk_peek_request(struct request_queue *q)
      */
 		ret = q->prep_rq_fn(q, rq);
     if (rq->frag_num != 0) //
-      printk("Jonggyu: Breakpoint #4 in blk_peek_request"); //
+      printk("Jonggyu: Breakpoint #4 req = %d in blk_peek_request", req); //
 
 		if (ret == BLKPREP_OK) {
 			break;
@@ -3353,6 +3353,10 @@ void blk_end_request_all(struct request *rq, blk_status_t error)
 	bool pending;
 	unsigned int bidi_bytes = 0;
 
+  /* Added by Jonggyu */
+  if (rq->frag_num != 0)
+    printk("Jonggyu: in blk_end_request_all");
+
 	if (unlikely(blk_bidi_rq(rq)))
 		bidi_bytes = blk_rq_bytes(rq->next_rq);
 
@@ -3747,6 +3751,15 @@ void blk_flush_plug_list(struct blk_plug *plug, bool from_schedule)
 	local_irq_save(flags);
 	while (!list_empty(&list)) {
 		rq = list_entry_rq(list.next);
+    /* 
+     * Added by Jonggyu
+     * The following printk denotes whether it's from schedule() or not
+     */
+    if (rq->frag_num != 0)
+    {
+      printk("Jonggyu: in blk_flush_plug_list, from_schedule = %d", from_schedule);
+    }
+
 		list_del_init(&rq->queuelist);
 		BUG_ON(!rq->q);
 		if (rq->q != q) {

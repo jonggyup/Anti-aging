@@ -1361,13 +1361,13 @@ static int scsi_prep_fn(struct request_queue *q, struct request *req)
 	int ret;
   
   /* Added by Jonggyu */
-//  if (req->frag_num != 0)
-//    printk("Jonggyu: Breakpoint #1 in scsi_prep_fn");
+  if (req->frag_num != 0)
+    printk("Jonggyu: Breakpoint #1 in scsi_prep_fn");
   //
 	ret = scsi_prep_state_check(sdev, req);
   /* Added by Jonggyu */
-//  if (req->frag_num != 0)
-//    printk("Jonggyu: Breakpoint #2 in scsi_prep_fn");
+  if (req->frag_num != 0)
+    printk("Jonggyu: Breakpoint #2 in scsi_prep_fn");
   //
 	if (ret != BLKPREP_OK)
 		goto out;
@@ -1383,8 +1383,8 @@ static int scsi_prep_fn(struct request_queue *q, struct request *req)
 		req->special = cmd;
 	}
   /* Added by Jonggyu */
-//  if (req->frag_num != 0)
-//    printk("Jonggyu: Breakpoint #3 in scsi_prep_fn");
+  if (req->frag_num != 0)
+    printk("Jonggyu: Breakpoint #3 in scsi_prep_fn");
   //
 
 	cmd->tag = req->tag;
@@ -1393,8 +1393,8 @@ static int scsi_prep_fn(struct request_queue *q, struct request *req)
 
 	ret = scsi_setup_cmnd(sdev, req);
   /* Added by Jonggyu */
-//  if (req->frag_num != 0)
-//    printk("Jonggyu: Breakpoint #4 in scsi_prep_fn");
+  if (req->frag_num != 0)
+    printk("Jonggyu: Breakpoint #4 in scsi_prep_fn");
   //
 out:
 	return scsi_prep_return(q, req, ret);
@@ -1886,10 +1886,16 @@ static void scsi_request_fn(struct request_queue *q)
 	 * cases (host limits or settings) should run the queue at some
 	 * later time.
 	 */
+  if (req->frag_num != 0)
+    printk ("the request (Address = %lu) is not ready", req);
+
 	spin_lock_irq(q->queue_lock);
 	blk_requeue_request(q, req);
 	atomic_dec(&sdev->device_busy);
 out_delay:
+  if (req->frag_num != 0)
+    printk ("the request (Address = %lu) is delayed", req);
+
 	if (!atomic_read(&sdev->device_busy) && !scsi_device_blocked(sdev))
 		blk_delay_queue(q, SCSI_QUEUE_DELAY);
 }
