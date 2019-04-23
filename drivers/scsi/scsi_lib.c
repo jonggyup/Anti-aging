@@ -1739,6 +1739,9 @@ static int scsi_dispatch_cmd(struct scsi_cmnd *cmd)
 	return rtn;
  done:
 	cmd->scsi_done(cmd);
+
+  if(cmd->request->frag_num != 0)
+    printk("Jonggyu: Fragmented I/O (addr = %lu) is finished ", cmd->request);
 	return 0;
 }
 

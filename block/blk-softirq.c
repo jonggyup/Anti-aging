@@ -165,6 +165,10 @@ void blk_complete_request(struct request *req)
 		return;
 	if (!blk_mark_rq_complete(req))
 		__blk_complete_request(req);
+  if (req->frag_num != 0)
+    printk("Jonggyu: in blk_complete_request, finished");
+
+
 }
 EXPORT_SYMBOL(blk_complete_request);
 
