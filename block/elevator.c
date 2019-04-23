@@ -395,6 +395,7 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
 {
 	sector_t boundary;
 	struct list_head *entry;
+  int i = 0;
 
 
 	if (q->last_merge == rq)
@@ -433,10 +434,12 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
  * Added by Jonggyu
 */
   if (rq->frag_list != NULL) {
-    while((rq = rq->frag_list)!=NULL){
-      printk("Breakpoint: Jonggyu// in elevator.c/elv_dispatch_sort(), entered into iteration for frag_lists");
+    while(rq != NULL){
+      i++;
+      printk("Breakpoint: Jonggyu// in elevator.c/#%d: Request Address = %lu", i, rq);
       list_del_init(&rq->queuelist);
       list_add(&rq->queuelist, entry);
+      rq = rq->frag_list;
     }
   }
   else

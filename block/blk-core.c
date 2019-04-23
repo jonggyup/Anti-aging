@@ -1926,6 +1926,7 @@ static blk_qc_t blk_queue_bio(struct request_queue *q, struct bio *bio)
   int frag_num = bio->frag_num;
   int ori_frag_num = frag_num;
   struct request *ori_req, *iter_req;
+  int i = 0;
   
   /*
    * low level driver can indicate that it wants pages above a
@@ -2046,6 +2047,13 @@ new:
     prev_req = req;
     fragmented = true;
     goto new;
+  }
+  req = ori_req;
+  while (req != NULL && fragmented == true)
+  {
+    i++;
+    printk("Jonggyu: #%d: Request Address = %lu", i, req);
+    req = req->frag_list;
   }
   req = ori_req;
 
