@@ -2930,7 +2930,7 @@ struct request *blk_peek_request(struct request_queue *q)
      */
 		ret = q->prep_rq_fn(q, rq);
     if (rq->frag_num != 0) //
-      printk("Jonggyu: Breakpoint #4 req = %d in blk_peek_request", req); //
+      printk("Jonggyu: Breakpoint #4 req = %lu in blk_peek_request", rq); //
 
 		if (ret == BLKPREP_OK) {
 			break;
@@ -3047,13 +3047,17 @@ EXPORT_SYMBOL(blk_start_request);
 struct request *blk_fetch_request(struct request_queue *q)
 {
 	struct request *rq;
-
+  
 	lockdep_assert_held(q->queue_lock);
 	WARN_ON_ONCE(q->mq_ops);
 
 	rq = blk_peek_request(q);
 	if (rq)
 		blk_start_request(rq);
+
+  /* Added by Jonggyu */
+  if (rq->frag_num != 0)
+    printk("Jonggyu: in blk_fetch_request");
 	return rq;
 }
 EXPORT_SYMBOL(blk_fetch_request);
