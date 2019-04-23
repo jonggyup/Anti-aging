@@ -395,6 +395,7 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
 {
 	sector_t boundary;
 	struct list_head *entry;
+  struct request *old_req, *pos;
   int i = 0;
 
 
@@ -410,7 +411,7 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
   
 	boundary = q->end_sector;
 	list_for_each_prev(entry, &q->queue_head) {
-		struct request *pos = list_entry_rq(entry);
+		pos = list_entry_rq(entry); //
 
 		if (req_op(rq) != req_op(pos))
 			break;
@@ -434,15 +435,19 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
  * Added by Jonggyu
 */
   if (rq->frag_list != NULL) {
+    old_req = pos;
     while(rq != NULL){
       i++;
       printk("Breakpoint: Jonggyu// in elevator.c/#%d: Request Address = %lu", i, rq);
       list_del_init(&rq->queuelist);
 	  	rq->rq_flags |= RQF_SORTED;
       rq->q = q;
-      list_add(&rq->queuelist, entry);
+      list_add(&rq->queuelist, &old_req->queuelist);
+      old_req = rq;
       rq = rq->frag_list;
     }
+    q->end_sector = rq_end_sector(rq);
+    q->boundary_rq = rq;
   }
   else
     list_add(&rq->queuelist, entry);
@@ -679,6 +684,10 @@ void __elv_add_request(struct request_queue *q, struct request *rq, int where)
 	if (rq->rq_flags & RQF_SOFTBARRIER) {
 		/* barriers are scheduling boundary, update end_sector */
 		if (!blk_rq_is_passthrough(rq)) {
+
+      if (rq->frag_num != 0)
+        printk("Jonggyu:, blk_rq_is_passthrough INNN");
+
 			q->end_sector = rq_end_sector(rq);
 			q->boundary_rq = rq;
 		}
@@ -708,10 +717,17 @@ void __elv_add_request(struct request_queue *q, struct request *rq, int where)
 		 *   with anything.  There's no point in delaying queue
 		 *   processing.
 		 */
+
+     if (rq->frag_num != 0)
+        printk("Jonggyu: In INSERT_BACK IN __elv_add_request");
+
 		__blk_run_queue(q);
 		break;
 
 	case ELEVATOR_INSERT_SORT_MERGE:
+      if (rq->frag_num != 0)
+        printk("Jonggyu: In SOFT_MERGE IN __elv_add_request");
+
 		/*
 		 * If we succeed in merging this request with one in the
 		 * queue already, we are done - rq has now been freed,
@@ -721,6 +737,9 @@ void __elv_add_request(struct request_queue *q, struct request *rq, int where)
 			break;
 		/* fall through */
 	case ELEVATOR_INSERT_SORT:
+    if (rq->frag_num != 0)
+       printk("Jonggyu: In ELEVATOR_INSERT_SORT IN __elv_add_request");
+
 		BUG_ON(blk_rq_is_passthrough(rq));
 		rq->rq_flags |= RQF_SORTED;
 		q->nr_sorted++;
