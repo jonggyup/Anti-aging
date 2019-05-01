@@ -2876,6 +2876,7 @@ static struct request *elv_next_request(struct request_queue *q)
 struct request *blk_peek_request(struct request_queue *q)
 {
 	struct request *rq;
+  struct request *iter_rq;
 	int ret;
   int fragmented = 0; // Added by Jonggyu to indicate if the io is fragmented or not.
 
@@ -2937,7 +2938,20 @@ struct request *blk_peek_request(struct request_queue *q)
     /* Commented by Jonggyu
      * q->prep_rq_fn is directed to scsi_prep_fn
      */
+
 		ret = q->prep_rq_fn(q, rq);
+    iter_rq = rq;
+
+    /*
+     * Added by Jonggyu
+     */
+    while (iter_rq->frag_list != NULL) //
+    {
+      q->prep_rq_fn(q, iter_rq); //
+      iter_rq = iter_rq->frag_list; //
+    }
+    //
+    
     if (rq->frag_num != 0) //
       printk("Jonggyu: Breakpoint #4 req = %lu in blk_peek_request", rq); //
 
@@ -2999,8 +3013,9 @@ static void blk_dequeue_request(struct request *rq)
 {
 	struct request_queue *q = rq->q;
 
-	BUG_ON(list_empty(&rq->queuelist));
-	BUG_ON(ELV_ON_HASH(rq));
+/* Disabled by Jonggyu */
+//	BUG_ON(list_empty(&rq->queuelist));
+//	BUG_ON(ELV_ON_HASH(rq));
 
 	list_del_init(&rq->queuelist);
 

@@ -395,7 +395,7 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
 {
 	sector_t boundary;
 	struct list_head *entry;
-  struct request *old_req, *pos;
+  struct request *old_req;
   int i = 0;
 
 
@@ -411,7 +411,7 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
   
 	boundary = q->end_sector;
 	list_for_each_prev(entry, &q->queue_head) {
-		pos = list_entry_rq(entry); //
+    struct request *pos = list_entry_rq(entry); //
 
 		if (req_op(rq) != req_op(pos))
 			break;
@@ -434,9 +434,12 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
 /* 
  * Added by Jonggyu
 */
-  if (rq->frag_list != NULL) {
-    old_req = pos;
-    while(rq != NULL){
+/*  if (rq->frag_list != NULL) {
+    old_req = rq;
+    list_add(&rq->queuelist, entry);
+    printk("Breakpoint: Jonggyu// in elevator.c/#%d: Request Address = %lu", i, rq);
+    while(rq->frag_list != NULL){
+      rq = rq->frag_list;
       i++;
       printk("Breakpoint: Jonggyu// in elevator.c/#%d: Request Address = %lu", i, rq);
       list_del_init(&rq->queuelist);
@@ -444,12 +447,11 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
       rq->q = q;
       list_add(&rq->queuelist, &old_req->queuelist);
       old_req = rq;
-      rq = rq->frag_list;
     }
     q->end_sector = rq_end_sector(rq);
     q->boundary_rq = rq;
   }
-  else
+  else*/
     list_add(&rq->queuelist, entry);
 }
 EXPORT_SYMBOL(elv_dispatch_sort);

@@ -1787,94 +1787,96 @@ static void scsi_request_fn(struct request_queue *q)
 
 	/*
 	 * To start with, we keep looping until the queue is empty, or until
-	 * the host is no longer able to accept any more requests.
-	 */
-	shost = sdev->host;
-	for (;;) {
-		int rtn;
-		/*
-		 * get next queueable request.  We do this early to make sure
-		 * that the request is fully prepared even if we cannot
-		 * accept it.
-		 */
-		req = blk_peek_request(q);
-		if (!req)
-			break;
+   * the host is no longer able to accept any more requests.
+   */
+  shost = sdev->host;
+  for (;;) {
+    int rtn;
+    /*
+     * get next queueable request.  We do this early to make sure
+     * that the request is fully prepared even if we cannot
+     * accept it.
+     */
+    req = blk_peek_request(q);
+    if (!req)
+      break;
+    while (req != NULL) {
+      if (unlikely(!scsi_device_online(sdev))) {
+        sdev_printk(KERN_ERR, sdev,
+            "rejecting I/O to offline device\n");
+        scsi_kill_request(req, q);
+        continue;
+      }
 
-		if (unlikely(!scsi_device_online(sdev))) {
-			sdev_printk(KERN_ERR, sdev,
-				    "rejecting I/O to offline device\n");
-			scsi_kill_request(req, q);
-			continue;
-		}
+      if (!scsi_dev_queue_ready(q, sdev))
+        break;
 
-		if (!scsi_dev_queue_ready(q, sdev))
-			break;
+      /*
+       * Remove the request from the request list.
+       */
+      if (!(blk_queue_tagged(q) && !blk_queue_start_tag(q, req)))
+        blk_start_request(req);
 
-		/*
-		 * Remove the request from the request list.
-		 */
-		if (!(blk_queue_tagged(q) && !blk_queue_start_tag(q, req)))
-			blk_start_request(req);
+      spin_unlock_irq(q->queue_lock);
+      cmd = blk_mq_rq_to_pdu(req);
+      if (cmd != req->special) {
+        printk(KERN_CRIT "impossible request in %s.\n"
+            "please mail a stack trace to "
+            "linux-scsi@vger.kernel.org\n",
+            __func__);
+        blk_dump_rq_flags(req, "foo");
+        BUG();
+      }
 
-		spin_unlock_irq(q->queue_lock);
-		cmd = blk_mq_rq_to_pdu(req);
-		if (cmd != req->special) {
-			printk(KERN_CRIT "impossible request in %s.\n"
-					 "please mail a stack trace to "
-					 "linux-scsi@vger.kernel.org\n",
-					 __func__);
-			blk_dump_rq_flags(req, "foo");
-			BUG();
-		}
+      /*
+       * We hit this when the driver is using a host wide
+       * tag map. For device level tag maps the queue_depth check
+       * in the device ready fn would prevent us from trying
+       * to allocate a tag. Since the map is a shared host resource
+       * we add the dev to the starved list so it eventually gets
+       * a run when a tag is freed.
+       */
+      if (blk_queue_tagged(q) && !(req->rq_flags & RQF_QUEUED)) {
+        spin_lock_irq(shost->host_lock);
+        if (list_empty(&sdev->starved_entry))
+          list_add_tail(&sdev->starved_entry,
+              &shost->starved_list);
+        spin_unlock_irq(shost->host_lock);
+        goto not_ready;
+      }
 
-		/*
-		 * We hit this when the driver is using a host wide
-		 * tag map. For device level tag maps the queue_depth check
-		 * in the device ready fn would prevent us from trying
-		 * to allocate a tag. Since the map is a shared host resource
-		 * we add the dev to the starved list so it eventually gets
-		 * a run when a tag is freed.
-		 */
-		if (blk_queue_tagged(q) && !(req->rq_flags & RQF_QUEUED)) {
-			spin_lock_irq(shost->host_lock);
-			if (list_empty(&sdev->starved_entry))
-				list_add_tail(&sdev->starved_entry,
-					      &shost->starved_list);
-			spin_unlock_irq(shost->host_lock);
-			goto not_ready;
-		}
+      if (!scsi_target_queue_ready(shost, sdev))
+        goto not_ready;
 
-		if (!scsi_target_queue_ready(shost, sdev))
-			goto not_ready;
+      if (!scsi_host_queue_ready(q, shost, sdev))
+        goto host_not_ready;
 
-		if (!scsi_host_queue_ready(q, shost, sdev))
-			goto host_not_ready;
-	
-		if (sdev->simple_tags)
-			cmd->flags |= SCMD_TAGGED;
-		else
-			cmd->flags &= ~SCMD_TAGGED;
+      if (sdev->simple_tags)
+        cmd->flags |= SCMD_TAGGED;
+      else
+        cmd->flags &= ~SCMD_TAGGED;
 
-		/*
-		 * Finally, initialize any error handling parameters, and set up
-		 * the timers for timeouts.
-		 */
-		scsi_init_cmd_errh(cmd);
+      /*
+       * Finally, initialize any error handling parameters, and set up
+       * the timers for timeouts.
+       */
+      scsi_init_cmd_errh(cmd);
 
-		/*
-		 * Dispatch the command to the low-level driver.
-		 */
-		cmd->scsi_done = scsi_done;
-		rtn = scsi_dispatch_cmd(cmd);
-		if (rtn) {
-			scsi_queue_insert(cmd, rtn);
-			spin_lock_irq(q->queue_lock);
-			goto out_delay;
-		}
-		spin_lock_irq(q->queue_lock);
-	}
-
+      /*
+       * Dispatch the command to the low-level driver.
+       */
+      cmd->scsi_done = scsi_done;
+      rtn = scsi_dispatch_cmd(cmd);
+      if (rtn) {
+        scsi_queue_insert(cmd, rtn);
+        spin_lock_irq(q->queue_lock);
+        goto out_delay;
+      }
+      spin_lock_irq(q->queue_lock);
+      
+      req = req->frag_list;
+    }
+  } //
 	return;
 
  host_not_ready:
