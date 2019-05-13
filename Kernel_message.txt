@@ -1,123 +1,114 @@
-[   95.859960] F2FS-fs (sda1): invalid crc value
-[   95.978135] F2FS-fs (sda1): Mounted with checkpoint version = 1
-[  169.261832] cache_flush.sh (5072): drop_caches: 3
-[  169.765740] Jonggyu: #1: Request Address = 18446612199191751680
-[  169.765743] Jonggyu: #2: Request Address = 18446612199191753728
-[  169.765744] Jonggyu: #3: Request Address = 18446612199191754752
-[  169.765745] Jonggyu: #4: Request Address = 18446612199191752704
-[  169.765746] Jonggyu: #5: Request Address = 18446612199191755776
-[  169.765748] Jonggyu: #6: Request Address = 18446612199191756800
-[  169.765749] Jonggyu: #7: Request Address = 18446612199191757824
-[  169.765750] Jonggyu: #8: Request Address = 18446612199191758848
-[  169.765751] Jonggyu: Breakpoint #01// In plug
-[  169.765752] Jonggyu: Breakpoint #04// In plug
-[  169.765753] Jonggyu: BLK_END_MAKE_REQUEST
-[  169.765754] Jonggyu: Breakpoint #1 in generic_make_request()
-[  169.765755] Jonggyu: Breakpoint #2 in generic_make_request()
-[  169.765756] Jonggyu: Breakpoint #END in generic_make_request()
-[  169.765757] Jonggyu: in blk_flush_plug_list, from_schedule = 0
-[  169.765758] Jonggyu: In SOFT_MERGE IN __elv_add_request
-[  169.765759] Jonggyu: In ELEVATOR_INSERT_SORT IN __elv_add_request
-[  169.765762] Breakpoint: Jonggyu// in elevator.c/#0: Request Address = 18446612199191751680
-[  169.765763] Breakpoint: Jonggyu// in elevator.c/#1: Request Address = 18446612199191753728
-[  169.765765] Breakpoint: Jonggyu// in elevator.c/#2: Request Address = 18446612199191754752
-[  169.765766] Breakpoint: Jonggyu// in elevator.c/#3: Request Address = 18446612199191752704
-[  169.765767] Breakpoint: Jonggyu// in elevator.c/#4: Request Address = 18446612199191755776
-[  169.765768] Breakpoint: Jonggyu// in elevator.c/#5: Request Address = 18446612199191756800
-[  169.765769] Breakpoint: Jonggyu// in elevator.c/#6: Request Address = 18446612199191757824
-[  169.765770] Breakpoint: Jonggyu// in elevator.c/#7: Request Address = 18446612199191758848
-[  169.765771] Jonggyu: Breakpoint #1 in blk_peek_request
-[  169.765772] Jonggyu: Breakpoint #2 in blk_peek_request
-[  169.765773] Jonggyu: Breakpoint #3 in blk_peek_request
-[  169.765774] Jonggyu: Breakpoint #1 in scsi_prep_fn
-[  169.765775] Jonggyu: Breakpoint #2 in scsi_prep_fn
-[  169.765776] Jonggyu: Breakpoint #3 in scsi_prep_fn
-[  169.765779] Jonggyu: Breakpoint #4 in scsi_prep_fn
-[  169.765780] Jonggyu: Breakpoint #4 req = 18446612199191751680 in blk_peek_request
-[  169.765781] Jonggyu: Breakpoint #7 in blk_peek_request
-[  169.765782] Jonggyu: Breakpoint #END in blk_peek_request
-[  169.765788] Jonggyu: Breakpoint #1 in blk_peek_request
-[  169.765789] Jonggyu: Breakpoint #2 in blk_peek_request
-[  169.765790] Jonggyu: Breakpoint #3 in blk_peek_request
-[  169.765790] Jonggyu: Breakpoint #1 in scsi_prep_fn
-[  169.765791] Jonggyu: Breakpoint #2 in scsi_prep_fn
-[  169.765792] Jonggyu: Breakpoint #3 in scsi_prep_fn
-[  169.765793] Jonggyu: Breakpoint #4 in scsi_prep_fn
-[  169.765794] Jonggyu: Breakpoint #4 req = 18446612199191753728 in blk_peek_request
-[  169.765795] Jonggyu: Breakpoint #7 in blk_peek_request
-[  169.765795] Jonggyu: Breakpoint #END in blk_peek_request
-[  169.765798] Jonggyu: Breakpoint #1 in blk_peek_request
-[  169.765799] Jonggyu: Breakpoint #2 in blk_peek_request
-[  169.765799] Jonggyu: Breakpoint #3 in blk_peek_request
-[  169.765800] Jonggyu: Breakpoint #1 in scsi_prep_fn
-[  169.765801] Jonggyu: Breakpoint #2 in scsi_prep_fn
-[  169.765802] Jonggyu: Breakpoint #3 in scsi_prep_fn
-[  169.765803] Jonggyu: Breakpoint #4 in scsi_prep_fn
-[  169.765804] Jonggyu: Breakpoint #4 req = 18446612199191754752 in blk_peek_request
-[  169.765805] Jonggyu: Breakpoint #7 in blk_peek_request
-[  169.765806] Jonggyu: Breakpoint #END in blk_peek_request
-[  169.765808] Jonggyu: Breakpoint #1 in blk_peek_request
-[  169.765809] Jonggyu: Breakpoint #2 in blk_peek_request
-[  169.765809] Jonggyu: Breakpoint #3 in blk_peek_request
-[  169.765810] Jonggyu: Breakpoint #1 in scsi_prep_fn
-[  169.765811] Jonggyu: Breakpoint #2 in scsi_prep_fn
-[  169.765812] Jonggyu: Breakpoint #3 in scsi_prep_fn
-[  169.765813] Jonggyu: Breakpoint #4 in scsi_prep_fn
-[  169.765814] Jonggyu: Breakpoint #4 req = 18446612199191752704 in blk_peek_request
-[  169.765815] Jonggyu: Breakpoint #7 in blk_peek_request
-[  169.765815] Jonggyu: Breakpoint #END in blk_peek_request
-[  169.765818] Jonggyu: Breakpoint #1 in blk_peek_request
-[  169.765819] Jonggyu: Breakpoint #2 in blk_peek_request
-[  169.765819] Jonggyu: Breakpoint #3 in blk_peek_request
-[  169.765820] Jonggyu: Breakpoint #1 in scsi_prep_fn
-[  169.765821] Jonggyu: Breakpoint #2 in scsi_prep_fn
-[  169.765822] Jonggyu: Breakpoint #3 in scsi_prep_fn
-[  169.765823] Jonggyu: Breakpoint #4 in scsi_prep_fn
-[  169.765824] Jonggyu: Breakpoint #4 req = 18446612199191755776 in blk_peek_request
-[  169.765824] Jonggyu: Breakpoint #7 in blk_peek_request
-[  169.765825] Jonggyu: Breakpoint #END in blk_peek_request
-[  169.765828] Jonggyu: Breakpoint #1 in blk_peek_request
-[  169.765829] Jonggyu: Breakpoint #2 in blk_peek_request
-[  169.765829] Jonggyu: Breakpoint #3 in blk_peek_request
-[  169.765830] Jonggyu: Breakpoint #1 in scsi_prep_fn
-[  169.765831] Jonggyu: Breakpoint #2 in scsi_prep_fn
-[  169.765832] Jonggyu: Breakpoint #3 in scsi_prep_fn
-[  169.765833] Jonggyu: Breakpoint #4 in scsi_prep_fn
-[  169.765834] Jonggyu: Breakpoint #4 req = 18446612199191756800 in blk_peek_request
-[  169.765834] Jonggyu: Breakpoint #7 in blk_peek_request
-[  169.765835] Jonggyu: Breakpoint #END in blk_peek_request
-[  169.765838] Jonggyu: Breakpoint #1 in blk_peek_request
-[  169.765838] Jonggyu: Breakpoint #2 in blk_peek_request
-[  169.765839] Jonggyu: Breakpoint #3 in blk_peek_request
-[  169.765840] Jonggyu: Breakpoint #1 in scsi_prep_fn
-[  169.765840] Jonggyu: Breakpoint #2 in scsi_prep_fn
-[  169.765841] Jonggyu: Breakpoint #3 in scsi_prep_fn
-[  169.765842] Jonggyu: Breakpoint #4 in scsi_prep_fn
-[  169.765843] Jonggyu: Breakpoint #4 req = 18446612199191757824 in blk_peek_request
-[  169.765844] Jonggyu: Breakpoint #7 in blk_peek_request
-[  169.765845] Jonggyu: Breakpoint #END in blk_peek_request
-[  169.765847] Jonggyu: Breakpoint #1 in blk_peek_request
-[  169.765848] Jonggyu: Breakpoint #2 in blk_peek_request
-[  169.765849] Jonggyu: Breakpoint #3 in blk_peek_request
-[  169.765849] Jonggyu: Breakpoint #1 in scsi_prep_fn
-[  169.765850] Jonggyu: Breakpoint #2 in scsi_prep_fn
-[  169.765851] Jonggyu: Breakpoint #3 in scsi_prep_fn
-[  169.765852] Jonggyu: Breakpoint #4 in scsi_prep_fn
-[  169.765853] Jonggyu: Breakpoint #4 req = 18446612199191758848 in blk_peek_request
-[  169.765854] Jonggyu: Breakpoint #7 in blk_peek_request
-[  169.765854] Jonggyu: Breakpoint #END in blk_peek_request
-[  169.765986] Jonggyu: in blk_complete_request, req addr = 18446612199191753728
-[  169.765988] Jonggyu: in blk_complete_request, finished
-[  169.765997] Jonggyu: in blk_complete_request, req addr = 18446612199191751680
-[  169.765998] Jonggyu: in blk_complete_request, finished
-[  169.766008] Jonggyu: in blk_complete_request, req addr = 18446612199191752704
-[  169.766009] Jonggyu: in blk_complete_request, finished
-[  169.766023] Jonggyu: in blk_complete_request, req addr = 18446612199191755776
-[  169.766024] Jonggyu: in blk_complete_request, finished
-[  169.766032] Jonggyu: in blk_complete_request, req addr = 18446612199191756800
-[  169.766033] Jonggyu: in blk_complete_request, finished
-[  169.766062] Jonggyu: in blk_complete_request, req addr = 18446612199191754752
-[  169.766063] Jonggyu: in blk_complete_request, finished
-[  169.766078] Jonggyu: in blk_complete_request, req addr = 18446612199191757824
-[  169.766079] Jonggyu: in blk_complete_request, finished
-[  169.766087] Jonggyu: in blk_complete_request, req addr = 18446612199191758848
+[  127.164636] F2FS-fs (sda1): invalid crc value
+[  127.178598] F2FS-fs (sda1): Mounted with checkpoint version = 1
+[  200.814002] cache_flush.sh (5119): drop_caches: 3
+[  201.320989] Jonggyu: #1: Request Address = 18446612199105016832
+[  201.320992] Jonggyu: #2: Request Address = 18446612199105017856
+[  201.320994] Jonggyu: #3: Request Address = 18446612199105009664
+[  201.320995] Jonggyu: #4: Request Address = 18446612199105011712
+[  201.320997] Jonggyu: #5: Request Address = 18446612199105024000
+[  201.320998] Jonggyu: #6: Request Address = 18446612199105031168
+[  201.320999] Jonggyu: #7: Request Address = 18446612199105020928
+[  201.321000] Jonggyu: #8: Request Address = 18446612199105019904
+[  201.321001] Jonggyu: Breakpoint #01// In plug
+[  201.321002] Jonggyu: Breakpoint #04// In plug
+[  201.321003] Jonggyu: BLK_END_MAKE_REQUEST
+[  201.321004] Jonggyu: Breakpoint #1 in generic_make_request()
+[  201.321005] Jonggyu: Breakpoint #2 in generic_make_request()
+[  201.321006] Jonggyu: Breakpoint #END in generic_make_request()
+[  201.321007] Jonggyu: in blk_flush_plug_list, from_schedule = 0
+[  201.321009] Jonggyu: In SOFT_MERGE IN __elv_add_request
+[  201.321010] Jonggyu: In ELEVATOR_INSERT_SORT IN __elv_add_request
+[  201.321012] Jonggyu: Breakpoint #1 in blk_peek_request
+[  201.321013] Jonggyu: Breakpoint #2 in blk_peek_request
+[  201.321014] Jonggyu: Breakpoint #3 in blk_peek_request
+[  201.321015] Jonggyu: Breakpoint #1 in scsi_prep_fn
+[  201.321016] Jonggyu: Breakpoint #2 in scsi_prep_fn
+[  201.321018] Jonggyu: Breakpoint #3 in scsi_prep_fn
+[  201.321020] Jonggyu: Breakpoint #4 in scsi_prep_fn
+[  201.321021] Jonggyu: Breakpoint #1 in scsi_prep_fn
+[  201.321022] Jonggyu: Breakpoint #2 in scsi_prep_fn
+[  201.321023] Jonggyu: Breakpoint #3 in scsi_prep_fn
+[  201.321024] Jonggyu: Breakpoint #4 in scsi_prep_fn
+[  201.321025] Jonggyu: Breakpoint #1 in scsi_prep_fn
+[  201.321025] Jonggyu: Breakpoint #2 in scsi_prep_fn
+[  201.321026] Jonggyu: Breakpoint #3 in scsi_prep_fn
+[  201.321028] Jonggyu: Breakpoint #4 in scsi_prep_fn
+[  201.321029] Jonggyu: Breakpoint #1 in scsi_prep_fn
+[  201.321029] Jonggyu: Breakpoint #2 in scsi_prep_fn
+[  201.321030] Jonggyu: Breakpoint #3 in scsi_prep_fn
+[  201.321031] Jonggyu: Breakpoint #4 in scsi_prep_fn
+[  201.321032] Jonggyu: Breakpoint #1 in scsi_prep_fn
+[  201.321033] Jonggyu: Breakpoint #2 in scsi_prep_fn
+[  201.321033] Jonggyu: Breakpoint #3 in scsi_prep_fn
+[  201.321035] Jonggyu: Breakpoint #4 in scsi_prep_fn
+[  201.321035] Jonggyu: Breakpoint #1 in scsi_prep_fn
+[  201.321036] Jonggyu: Breakpoint #2 in scsi_prep_fn
+[  201.321037] Jonggyu: Breakpoint #3 in scsi_prep_fn
+[  201.321038] Jonggyu: Breakpoint #4 in scsi_prep_fn
+[  201.321039] Jonggyu: Breakpoint #1 in scsi_prep_fn
+[  201.321039] Jonggyu: Breakpoint #2 in scsi_prep_fn
+[  201.321040] Jonggyu: Breakpoint #3 in scsi_prep_fn
+[  201.321041] Jonggyu: Breakpoint #4 in scsi_prep_fn
+[  201.321042] Jonggyu: Breakpoint #1 in scsi_prep_fn
+[  201.321043] Jonggyu: Breakpoint #2 in scsi_prep_fn
+[  201.321043] Jonggyu: Breakpoint #3 in scsi_prep_fn
+[  201.321045] Jonggyu: Breakpoint #4 in scsi_prep_fn
+[  201.321046] Jonggyu: Breakpoint #4 req = 18446612199105016832 in blk_peek_request
+[  201.321047] Jonggyu: Breakpoint #7 in blk_peek_request
+[  201.321048] Jonggyu: Breakpoint #END in blk_peek_request
+[  201.322569] Jonggyu: in blk_complete_request, req addr = 18446612199105016832
+[  201.322573] Jonggyu: in __blk_complete_request
+[  201.322574] Jonggyu: in blk_complete_request, finished
+[  201.322576] Jonggyu: in blk_complete_request, req addr = 18446612199105017856
+[  201.322577] Jonggyu: in __blk_complete_request
+[  201.322579] Jonggyu: in blk_complete_request, finished
+[  201.322593] Jonggyu: in blk_complete_request, req addr = 18446612199105009664
+[  201.322594] Jonggyu: in __blk_complete_request
+[  201.322595] Jonggyu: in blk_complete_request, finished
+[  201.322597] Jonggyu: in blk_complete_request, req addr = 18446612199105011712
+[  201.322597] Jonggyu: in __blk_complete_request
+[  201.322599] Jonggyu: in blk_complete_request, finished
+[  201.322605] Jonggyu: in blk_complete_request, req addr = 18446612199105024000
+[  201.322606] Jonggyu: in __blk_complete_request
+[  201.322607] Jonggyu: in blk_complete_request, finished
+[  201.322622] Jonggyu: in blk_complete_request, req addr = 18446612199105020928
+[  201.322628] Jonggyu: in __blk_complete_request
+[  201.322635] Jonggyu: in blk_complete_request, finished
+[  201.322643] Jonggyu: in blk_complete_request, req addr = 18446612199105031168
+[  201.322651] Jonggyu: in __blk_complete_request
+[  201.322657] Jonggyu: in blk_complete_request, finished
+[  201.322663] Jonggyu: in blk_complete_request, req addr = 18446612199105019904
+[  201.322669] Jonggyu: in __blk_complete_request
+[  201.322676] Jonggyu: in blk_complete_request, finished
+[  239.786378] init: cgmanager main process (619) killed by TERM signal
+[  239.788033] init: tty4 main process (1348) killed by TERM signal
+[  239.788284] init: tty5 main process (1352) killed by TERM signal
+[  239.788529] init: tty2 main process (1358) killed by TERM signal
+[  239.788766] init: tty3 main process (1359) killed by TERM signal
+[  239.789016] init: tty6 main process (1362) killed by TERM signal
+[  239.789492] init: cron main process (1389) killed by TERM signal
+[  239.793341] init: irqbalance main process (1415) killed by TERM signal
+[  239.794047] init: tty1 main process (1563) killed by TERM signal
+[  239.797441] init: plymouth-upstart-bridge main process (7107) terminated with status 1
+[  239.797452] init: plymouth-upstart-bridge main process ended, respawning
+[  239.852923] init: plymouth-upstart-bridge main process (7152) terminated with status 1
+[  239.852932] init: plymouth-upstart-bridge main process ended, respawning
+[  239.876397] init: plymouth-upstart-bridge main process (7157) terminated with status 1
+[  239.876407] init: plymouth-upstart-bridge main process ended, respawning
+[  239.884449] init: plymouth-upstart-bridge main process (7160) terminated with status 1
+[  239.884459] init: plymouth-upstart-bridge main process ended, respawning
+[  239.890952] init: plymouth-upstart-bridge main process (7162) terminated with status 1
+[  239.890975] init: plymouth-upstart-bridge main process ended, respawning
+[  239.898219] init: plymouth-upstart-bridge main process (7164) terminated with status 1
+[  239.898233] init: plymouth-upstart-bridge main process ended, respawning
+[  239.908758] init: plymouth-upstart-bridge main process (7171) terminated with status 1
+[  239.908772] init: plymouth-upstart-bridge main process ended, respawning
+[  239.916407] init: plymouth-upstart-bridge main process (7174) terminated with status 1
+[  239.916415] init: plymouth-upstart-bridge main process ended, respawning
+[  239.923297] init: plymouth-upstart-bridge main process (7177) terminated with status 1
+[  239.923311] init: plymouth-upstart-bridge main process ended, respawning
+[  239.932557] init: plymouth-upstart-bridge main process (7180) terminated with status 1
+[  239.932567] init: plymouth-upstart-bridge main process ended, respawning
+[  239.938900] init: plymouth-upstart-bridge main process (7182) terminated with status 1
+[  239.938913] init: plymouth-upstart-bridge respawning too fast, stopped
+[  240.312152] init: wait-for-state (rcplymouth-shutdown) main process (7184) killed by TERM signal

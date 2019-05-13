@@ -145,6 +145,7 @@ struct request {
    /* Added by Jonggyu */
   struct request *frag_list;
   int frag_num;
+  int fragmented;
   // 
 	int cpu;
 	unsigned int cmd_flags;		/* op and common flags */
