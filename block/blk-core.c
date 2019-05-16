@@ -1934,6 +1934,7 @@ static blk_qc_t blk_queue_bio(struct request_queue *q, struct bio *bio)
    * ISA dma in theory)
    */
 
+new:
 
   blk_queue_bounce(q, &bio);
 
@@ -1995,19 +1996,10 @@ get_rq:
 	 * Grab a free request. This is might sleep but can not fail.
 	 * Returns with the queue unlocked.
 	 */
-  
   if (fragmented == false)
    	blk_queue_enter_live(q);
 
-new:
-  if (fragmented == true)
-    spin_lock_irq(q->queue_lock);
-
-
-  /* 
-   * Commented by Jonggyu
-   * get_request must be called with lock held.
-   */
+ 
   req = get_request(q, bio->bi_opf, bio, 0);
 
   if (IS_ERR(req)) {
@@ -2064,8 +2056,8 @@ new:
 	plug = current->plug;
 
 	if (plug) {
-    if (fragmented == true)
-      printk("Jonggyu: Breakpoint #01// In plug");
+//    if (fragmented == true)
+//      printk("Jonggyu: Breakpoint #01// In plug");
 
 		/*
      * 
@@ -2078,8 +2070,8 @@ new:
 		if (!request_count || list_empty(&plug->list))
 			trace_block_plug(q);
 		else {
-    if (fragmented == true)
-      printk("Jonggyu: Breakpoint #02// In plug");
+//    if (fragmented == true)
+//      printk("Jonggyu: Breakpoint #02// In plug");
 
 
 			struct request *last = list_entry_rq(plug->list.prev);
@@ -2087,11 +2079,12 @@ new:
 			    blk_rq_bytes(last) >= BLK_PLUG_FLUSH_SIZE) {
 				blk_flush_plug_list(plug, false);
 				trace_block_plug(q);
-    if (fragmented == true)
-      printk("Jonggyu: Breakpoint #03// In plug");
+//    if (fragmented == true)
+//      printk("Jonggyu: Breakpoint #03// In plug");
 
 			}
 		}
+<<<<<<< HEAD
     list_add_tail(&req->queuelist, &plug->list);
     blk_account_io_start(req, true);
     while (fragmented == true && req->frag_list != NULL)
@@ -2101,12 +2094,18 @@ new:
     }
     if (fragmented == true)
       printk("Jonggyu: Breakpoint #04// In plug");
+=======
+  	list_add_tail(&req->queuelist, &plug->list);
+		blk_account_io_start(req, true);
+//    if (fragmented == true)
+//      printk("Jonggyu: Breakpoint #04// In plug");
+>>>>>>> parent of 528be71... Eleminated some redundant useless jobs for fragmented I/Os in blk_queue_bio
 
 	} else {
 		spin_lock_irq(q->queue_lock);
 		add_acct_request(q, req, where);
-    if (fragmented == true)
-      printk("Jonggyu: Breakpoint #05// In plug");
+//    if (fragmented == true)
+//      printk("Jonggyu: Breakpoint #05// In plug");
 
 		__blk_run_queue(q);
 out_unlock:
@@ -2121,8 +2120,8 @@ out_unlock:
     goto new;
   }*/
 
-   if(fragmented == true)
-    printk("Jonggyu: BLK_END_MAKE_REQUEST");
+//   if(fragmented == true)
+//    printk("Jonggyu: BLK_END_MAKE_REQUEST");
 
 	return BLK_QC_T_NONE;
 }
@@ -2432,8 +2431,8 @@ blk_qc_t generic_make_request(struct bio *bio)
 			ret = q->make_request_fn(q, bio);
       
       /* Added by Jonggyu */
-      if (bio->fragmented == 100)
-        printk("Jonggyu: Breakpoint #1 in generic_make_request()");
+//      if (bio->fragmented == 100)
+//        printk("Jonggyu: Breakpoint #1 in generic_make_request()");
 
 			blk_queue_exit(q);
 
@@ -2475,8 +2474,8 @@ blk_qc_t generic_make_request(struct bio *bio)
 	current->bio_list = NULL; /* deactivate */
 
 out:
-  if (fragmented == true)
-    printk("Jonggyu: Breakpoint #END in generic_make_request()");
+//  if (fragmented == true)
+//    printk("Jonggyu: Breakpoint #6 in generic_make_request()");
 
 	return ret;
 }
@@ -2899,14 +2898,14 @@ struct request *blk_peek_request(struct request_queue *q)
 			 * sees this request (possibly after
 			 * requeueing).  Notify IO scheduler.
 			 */
-      if (rq->frag_num != 0) //
-        printk("Jonggyu: Breakpoint #1 in blk_peek_request"); //
+//      if (rq->frag_num != 0) //
+//        printk("Jonggyu: Breakpoint #1 in blk_peek_request"); //
 
 			if (rq->rq_flags & RQF_SORTED)
 				elv_activate_rq(q, rq);
 
-      if (rq->frag_num != 0) //
-        printk("Jonggyu: Breakpoint #2 in blk_peek_request"); //
+//      if (rq->frag_num != 0) //
+//        printk("Jonggyu: Breakpoint #2 in blk_peek_request"); //
 
 
 			/*
@@ -2923,8 +2922,8 @@ struct request *blk_peek_request(struct request_queue *q)
 			q->boundary_rq = NULL;
 		}
 
-    if (rq->frag_num != 0) //
-      printk("Jonggyu: Breakpoint #3 in blk_peek_request"); //
+//    if (rq->frag_num != 0) //
+//      printk("Jonggyu: Breakpoint #3 in blk_peek_request"); //
 
 
 		if (rq->rq_flags & RQF_DONTPREP)
@@ -2947,6 +2946,7 @@ struct request *blk_peek_request(struct request_queue *q)
      */
 
 		ret = q->prep_rq_fn(q, rq);
+<<<<<<< HEAD
     iter_rq = rq;
 
     /*
@@ -2963,12 +2963,16 @@ struct request *blk_peek_request(struct request_queue *q)
     
     if (rq->frag_num != 0) //
       printk("Jonggyu: Breakpoint #4 req = %lu in blk_peek_request", rq); //
+=======
+//    if (rq->frag_num != 0) //
+  //    printk("Jonggyu: Breakpoint #4 in blk_peek_request"); //
+>>>>>>> parent of 528be71... Eleminated some redundant useless jobs for fragmented I/Os in blk_queue_bio
 
 		if (ret == BLKPREP_OK) {
 			break;
 		} else if (ret == BLKPREP_DEFER) {
-       if (rq->frag_num != 0) //
-        printk("Jonggyu: Breakpoint #5 in blk_peek_request"); //
+//       if (rq->frag_num != 0) //
+//        printk("Jonggyu: Breakpoint #5 in blk_peek_request"); //
 
 			/*
 			 * the request may have been (partially) prepped.
@@ -2994,8 +2998,8 @@ struct request *blk_peek_request(struct request_queue *q)
 			 * any debug logic in the end I/O path.
 			 */
 			blk_start_request(rq);
-      if (rq->frag_num != 0) //
-        printk("Jonggyu: Breakpoint #6 in blk_peek_request"); //
+//      if (rq->frag_num != 0) //
+//        printk("Jonggyu: Breakpoint #6 in blk_peek_request"); //
 
 			__blk_end_request_all(rq, ret == BLKPREP_INVALID ?
 					BLK_STS_TARGET : BLK_STS_IOERR);
@@ -3008,11 +3012,8 @@ struct request *blk_peek_request(struct request_queue *q)
    * Apparently, the request stucture is freed before here 
    * so accessing requests can incur null pointer exception.
    */
-  if(fragmented > 0) {//
-        printk("Jonggyu: Breakpoint #7 in blk_peek_request"); //
-        printk("Jonggyu: Breakpoint #END in blk_peek_request"); //
-
-  }
+//  if(fragmented > 0) //
+//        printk("Jonggyu: Breakpoint #7 in blk_peek_request"); //
 
 	return rq;
 }
