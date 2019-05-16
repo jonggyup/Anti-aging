@@ -1783,7 +1783,7 @@ static void scsi_request_fn(struct request_queue *q)
 	struct scsi_device *sdev = q->queuedata;
 	struct Scsi_Host *shost;
 	struct scsi_cmnd *cmd;
-	struct request *req;
+	struct request *req, *tmp;
 
 	/*
 	 * To start with, we keep looping until the queue is empty, or until
@@ -1811,7 +1811,7 @@ static void scsi_request_fn(struct request_queue *q)
       if (!scsi_dev_queue_ready(q, sdev))
         break;
 
-    while (req != NULL) { //
+//      while (req != NULL) { //
 
       /*
        * Remove the request from the request list.
@@ -1879,13 +1879,24 @@ static void scsi_request_fn(struct request_queue *q)
       /*
        * Added by Jonggyu
        */
-      if (req->frag_num > 0 && req->fragmented ==1) {
+/*      if (req->fragmented == 1)
+      {
+        tmp = req;
+        while (req != NULL)
+        {
+          printk("Jonggyu: In scsi_request_fn, req's address = %lu", req);
+          req = req->frag_list;
+        }
+        req = tmp;
+      }
+
+      if (req->fragmented == 1 || req->fragmented ==2) {
         req = req->frag_list; //
-       // req->rq_flags |= RQF_STARTED;
       }
       else
         break;
     } //
+    */
   } 
 	return;
 
@@ -3112,6 +3123,7 @@ int scsi_internal_device_block_nowait(struct scsi_device *sdev)
 		blk_mq_quiesce_queue_nowait(q);
 	} else {
 		spin_lock_irqsave(q->queue_lock, flags);
+    printk("Jonggyu: calling blk_stop_queue in scsi_internal_device_block_nowait");
 		blk_stop_queue(q);
 		spin_unlock_irqrestore(q->queue_lock, flags);
 	}

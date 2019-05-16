@@ -26,24 +26,8 @@ static int noop_dispatch(struct request_queue *q, int force)
 
   rq = list_first_entry_or_null(&nd->queue, struct request, queuelist);
   if (rq) {
-//    frag_num = rq->frag_num;
     list_del_init(&rq->queuelist);
     elv_dispatch_sort(q, rq);
-    if (frag_num > 0) {
-      printk("req address = %lu", rq);
-      printk("req->frag_list address = %lu", rq->frag_list);
-//      while (frag_num >= 1 && rq->frag_list != NULL){
-//        printk("frag_num = %d in noop", frag_num);
-//        rq = rq->frag_list;
-//        list_del_init(&rq->queuelist);
-//        rq->frag_num = 1000;
-//        printk("req address = %lu", rq);
-//        printk("Jonggyu: Breakpoint #2 in noop-iosched.c/noop_dispatch");    
-//        elv_dispatch_sort(q, rq);
-//        printk("Jonggyu: Breakpoint #3 in noop-iosched.c/noop_dispatch");    
-//        frag_num--;
-//      }
-    }
     return 1;
   }
   return 0;

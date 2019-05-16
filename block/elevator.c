@@ -395,7 +395,7 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
 {
 	sector_t boundary;
 	struct list_head *entry;
-  struct request *old_req;
+  struct request *iter_rq;
   int i = 0;
 
 
@@ -404,11 +404,20 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
   
   /* If the request is not fragmented or not the first one,
    * skip this process*/
-
-  	elv_rqhash_del(q, rq);
-
-  	q->nr_sorted--;
+   	elv_rqhash_del(q, rq);
   
+  	q->nr_sorted--;
+/*  if (rq->fragmented == 1)
+  {
+    iter_rq = rq;
+    while (iter_rq->frag_list != NULL)
+    {
+      iter_rq = iter_rq->frag_list;
+      elv_rqhash_del(q, iter_rq);
+      q->nr_sorted--;
+    }
+  }
+  */
 	boundary = q->end_sector;
 	list_for_each_prev(entry, &q->queue_head) {
     struct request *pos = list_entry_rq(entry); //
@@ -677,6 +686,8 @@ void elv_drain_elevator(struct request_queue *q)
 
 void __elv_add_request(struct request_queue *q, struct request *rq, int where)
 {
+  struct request *iter_rq;
+
 	trace_block_rq_insert(q, rq);
 
 	blk_pm_add_request(q, rq);
@@ -742,21 +753,47 @@ void __elv_add_request(struct request_queue *q, struct request *rq, int where)
     if (rq->frag_num != 0)
        printk("Jonggyu: In ELEVATOR_INSERT_SORT IN __elv_add_request");
 
-		BUG_ON(blk_rq_is_passthrough(rq));
-		rq->rq_flags |= RQF_SORTED;
-		q->nr_sorted++;
-		if (rq_mergeable(rq)) {
-			elv_rqhash_add(q, rq);
-			if (!q->last_merge)
-				q->last_merge = rq;
-		}
+    BUG_ON(blk_rq_is_passthrough(rq));
+    rq->rq_flags |= RQF_SORTED;
+    q->nr_sorted++;
+    if (rq_mergeable(rq)) {
+      elv_rqhash_add(q, rq);
+      if (rq->frag_num != 0)
+        printk("Jonggyu: in __elv_add_request, request is mergable");
+      if (!q->last_merge)
+        q->last_merge = rq;
+    }
+
+		q->elevator->type->ops.sq.elevator_add_req_fn(q, rq);
+
+/*    if (rq->fragmented == 1)
+    {
+      iter_rq = rq;
+      while (iter_rq->frag_list != NULL)
+      {
+        iter_rq->q = q;
+        iter_rq = iter_rq->frag_list;
+        iter_rq->rq_flags |= RQF_SORTED;
+        q->nr_sorted++;
+
+        if (rq_mergeable(iter_rq)) {
+          elv_rqhash_add(q, iter_rq);
+          if (rq->frag_num != 0)
+            printk("Jonggyu: in __elv_add_request, request2 is mergable");
+          if (!q->last_merge)
+            q->last_merge = iter_rq;
+        }
+
+		    q->elevator->type->ops.sq.elevator_add_req_fn(q, rq);
+      }
+    }*/
 
 		/*
 		 * Some ioscheds (cfq) run q->request_fn directly, so
 		 * rq cannot be accessed after calling
 		 * elevator_add_req_fn.
 		 */
-		q->elevator->type->ops.sq.elevator_add_req_fn(q, rq);
+
 		break;
 
 	case ELEVATOR_INSERT_FLUSH:

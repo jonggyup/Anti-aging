@@ -207,6 +207,7 @@ static inline int pm_request_idle(struct device *dev)
 
 static inline int pm_request_resume(struct device *dev)
 {
+  printk("Jonggyu: in pm_request_resum");
 	return __pm_runtime_resume(dev, RPM_ASYNC);
 }
 
