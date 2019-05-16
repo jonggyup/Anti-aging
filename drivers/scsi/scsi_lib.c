@@ -1800,6 +1800,7 @@ static void scsi_request_fn(struct request_queue *q)
     req = blk_peek_request(q);
     if (!req)
       break;
+    while (req != NULL) {
       if (unlikely(!scsi_device_online(sdev))) {
         sdev_printk(KERN_ERR, sdev,
             "rejecting I/O to offline device\n");
@@ -1807,11 +1808,8 @@ static void scsi_request_fn(struct request_queue *q)
         continue;
       }
 
-
       if (!scsi_dev_queue_ready(q, sdev))
         break;
-
-    while (req != NULL) { //
 
       /*
        * Remove the request from the request list.
@@ -1876,17 +1874,9 @@ static void scsi_request_fn(struct request_queue *q)
       }
       spin_lock_irq(q->queue_lock);
       
-      /*
-       * Added by Jonggyu
-       */
-      if (req->frag_num > 0 && req->fragmented ==1) {
-        req = req->frag_list; //
-       // req->rq_flags |= RQF_STARTED;
-      }
-      else
-        break;
-    } //
-  } 
+      req = req->frag_list;
+    }
+  } //
 	return;
 
  host_not_ready:
@@ -1901,15 +1891,15 @@ static void scsi_request_fn(struct request_queue *q)
 	 * cases (host limits or settings) should run the queue at some
 	 * later time.
 	 */
-//  if (req->frag_num != 0)
-//    printk ("the request (Address = %lu) is not ready", req);
+  if (req->frag_num != 0)
+    printk ("the request (Address = %lu) is not ready", req);
 
 	spin_lock_irq(q->queue_lock);
 	blk_requeue_request(q, req);
 	atomic_dec(&sdev->device_busy);
 out_delay:
-//  if (req->frag_num != 0)
-//    printk ("the request (Address = %lu) is delayed", req);
+  if (req->frag_num != 0)
+    printk ("the request (Address = %lu) is delayed", req);
 
 	if (!atomic_read(&sdev->device_busy) && !scsi_device_blocked(sdev))
 		blk_delay_queue(q, SCSI_QUEUE_DELAY);

@@ -2032,11 +2032,9 @@ get_rq:
   {
     bio = bio->frag_list;
     req->frag_num = ori_frag_num;
-    req->fragmented = 1;
-    
+		blk_account_io_start(req, true);
     if (fragmented == true) {
       prev_req->frag_list = req;
-	  	blk_account_io_start(req, true);
     }
     prev_req = req;
     fragmented = true;
@@ -2084,13 +2082,8 @@ get_rq:
 
 			}
 		}
-    list_add_tail(&req->queuelist, &plug->list);
-    blk_account_io_start(req, true);
-    while (fragmented == true && req->frag_list != NULL)
-    {
-      req = req->frag_list;
-      blk_account_io_start(req, true);
-    }
+  	list_add_tail(&req->queuelist, &plug->list);
+		blk_account_io_start(req, true);
     if (fragmented == true)
       printk("Jonggyu: Breakpoint #04// In plug");
   	list_add_tail(&req->queuelist, &plug->list);
@@ -2947,12 +2940,10 @@ struct request *blk_peek_request(struct request_queue *q)
     /*
      * Added by Jonggyu
      */
-     while (iter_rq->frag_list != NULL && iter_rq->fragmented == 1) //
+    while (iter_rq->frag_list != NULL) //
     {
-      iter_rq = iter_rq->frag_list; //
-      iter_rq->rq_flags |= RQF_STARTED;
       q->prep_rq_fn(q, iter_rq); //
-
+      iter_rq = iter_rq->frag_list; //
     }
     //
     
@@ -3016,9 +3007,7 @@ static void blk_dequeue_request(struct request *rq)
 {
 	struct request_queue *q = rq->q;
 
-/* Disabled by Jonggyu 
- */
-
+/* Disabled by Jonggyu */
 //	BUG_ON(list_empty(&rq->queuelist));
 //	BUG_ON(ELV_ON_HASH(rq));
 

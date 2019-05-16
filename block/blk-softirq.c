@@ -104,9 +104,6 @@ void __blk_complete_request(struct request *req)
 
 	BUG_ON(!q->softirq_done_fn);
 
-  if (req->fragmented == 1)
-    printk("Jonggyu: in __blk_complete_request");
-
 	local_irq_save(flags);
 	cpu = smp_processor_id();
 
