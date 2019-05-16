@@ -2084,7 +2084,6 @@ get_rq:
 
 			}
 		}
-<<<<<<< HEAD
     list_add_tail(&req->queuelist, &plug->list);
     blk_account_io_start(req, true);
     while (fragmented == true && req->frag_list != NULL)
@@ -2094,13 +2093,10 @@ get_rq:
     }
     if (fragmented == true)
       printk("Jonggyu: Breakpoint #04// In plug");
-=======
   	list_add_tail(&req->queuelist, &plug->list);
 		blk_account_io_start(req, true);
 //    if (fragmented == true)
 //      printk("Jonggyu: Breakpoint #04// In plug");
->>>>>>> parent of 528be71... Eleminated some redundant useless jobs for fragmented I/Os in blk_queue_bio
-
 	} else {
 		spin_lock_irq(q->queue_lock);
 		add_acct_request(q, req, where);
@@ -2946,7 +2942,6 @@ struct request *blk_peek_request(struct request_queue *q)
      */
 
 		ret = q->prep_rq_fn(q, rq);
-<<<<<<< HEAD
     iter_rq = rq;
 
     /*
@@ -2963,10 +2958,8 @@ struct request *blk_peek_request(struct request_queue *q)
     
     if (rq->frag_num != 0) //
       printk("Jonggyu: Breakpoint #4 req = %lu in blk_peek_request", rq); //
-=======
 //    if (rq->frag_num != 0) //
   //    printk("Jonggyu: Breakpoint #4 in blk_peek_request"); //
->>>>>>> parent of 528be71... Eleminated some redundant useless jobs for fragmented I/Os in blk_queue_bio
 
 		if (ret == BLKPREP_OK) {
 			break;
