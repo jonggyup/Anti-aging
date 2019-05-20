@@ -2122,7 +2122,7 @@ out_unlock:
   if (bio && bio->fragmented == 100 && bio->frag_list != NULL)
   {
     bio = bio->frag_list;
-    req->frag_num = ori_frag_num;
+/*    req->frag_num = ori_frag_num;
     req->fragmented = 1;
     printk(" Jonggyu: In blk_queue_bio, rq's address = %lu", req);
 
@@ -2131,8 +2131,8 @@ out_unlock:
       req->fragmented = 2;
     }
     prev_req = req;
-    fragmented = true;
-    goto new;
+    fragmented = true; */
+    goto new; 
   }
 
   if(fragmented == true)
