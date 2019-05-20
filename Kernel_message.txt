@@ -1,0 +1,221 @@
+[   41.394562] F2FS-fs (sda1): invalid crc value
+[   41.406330] F2FS-fs (sda1): Mounted with checkpoint version = 1
+[   48.557662] kauditd_printk_skb: 62 callbacks suppressed
+[   48.557663] audit: type=1400 audit(1557919678.336:74): apparmor="STATUS" operation="profile_replace" info="same as current profile, skipping" profile="unconfined" name="/usr/lib/cups/backend/cups-pdf" pid=2973 comm="apparmor_parser"
+[   48.557666] audit: type=1400 audit(1557919678.336:75): apparmor="STATUS" operation="profile_replace" info="same as current profile, skipping" profile="unconfined" name="/usr/sbin/cupsd" pid=2973 comm="apparmor_parser"
+[  114.864780] cache_flush.sh (5082): drop_caches: 3
+[  115.384686]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117278208
+[  115.384691] Jonggyu: Breakpoint #01// In plug
+[  115.384693] Jonggyu: Breakpoint #04// In plug
+[  115.384695]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117279232
+[  115.384698] Jonggyu: Breakpoint #01// In plug
+[  115.384699] Jonggyu: Breakpoint #04// In plug
+[  115.384700]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117280256
+[  115.384703] Jonggyu: Breakpoint #01// In plug
+[  115.384704] Jonggyu: Breakpoint #04// In plug
+[  115.384705]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117282304
+[  115.384708] Jonggyu: Breakpoint #01// In plug
+[  115.384709] Jonggyu: Breakpoint #04// In plug
+[  115.384710]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117283328
+[  115.384712] Jonggyu: Breakpoint #01// In plug
+[  115.384713] Jonggyu: Breakpoint #04// In plug
+[  115.384715]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117285376
+[  115.384717] Jonggyu: Breakpoint #01// In plug
+[  115.384718] Jonggyu: Breakpoint #04// In plug
+[  115.384720]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117286400
+[  115.384722] Jonggyu: Breakpoint #01// In plug
+[  115.384723] Jonggyu: Breakpoint #04// In plug
+[  115.384724]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117287424
+[  115.384727] Jonggyu: Breakpoint #01// In plug
+[  115.384728] Jonggyu: Breakpoint #04// In plug
+[  115.384729] Jonggyu: BLK_END_MAKE_REQUEST
+[  115.384730] Jonggyu: Breakpoint #1 in generic_make_request()
+[  115.384731] Jonggyu: Breakpoint #2 in generic_make_request()
+[  115.384733] Jonggyu: Breakpoint #END in generic_make_request()
+[  115.384739] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117285376
+[  115.384741] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117282304
+[  115.384742] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117283328
+[  115.384744] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117286400
+[  115.384745] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117280256
+[  115.384747] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117278208
+[  115.384748] Jonggyu: In SOFT_MERGE IN __elv_add_request
+[  115.384749] Jonggyu: In ELEVATOR_INSERT_SORT IN __elv_add_request
+[  115.384751] Jonggyu: in __elv_add_request, request is mergable
+[  115.384752] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117287424
+[  115.384754] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117279232
+[  115.384755] Jonggyu: in blk_flush_plug_list, escape the loop
+[  115.384779] Jonggyu: Breakpoint #1 in blk_peek_request
+[  115.384780] Jonggyu: Breakpoint #2 in blk_peek_request
+[  115.384781] Jonggyu: Breakpoint #3 in blk_peek_request
+[  115.384782] Jonggyu: Breakpoint #1 in scsi_prep_fn
+[  115.384784] Jonggyu: Breakpoint #2 in scsi_prep_fn
+[  115.384785] Jonggyu: Breakpoint #3 in scsi_prep_fn
+[  115.384787] Jonggyu: Breakpoint #4 in scsi_prep_fn
+[  115.384789] Jonggyu: Breakpoint #4 req = 18446612199117278208 in blk_peek_request
+[  115.384790] Jonggyu: Breakpoint #1 in blk_peek_request
+[  115.384791] Jonggyu: Breakpoint #2 in blk_peek_request
+[  115.384792] Jonggyu: Breakpoint #3 in blk_peek_request
+[  115.384793] Jonggyu: Breakpoint #1 in scsi_prep_fn
+[  115.384794] Jonggyu: Breakpoint #2 in scsi_prep_fn
+[  115.384795] Jonggyu: Breakpoint #3 in scsi_prep_fn
+[  115.384797] Jonggyu: Breakpoint #4 in scsi_prep_fn
+[  115.384799] Jonggyu: Breakpoint #4 req = 18446612199117279232 in blk_peek_request
+[  115.384800] Jonggyu: Breakpoint #1 in blk_peek_request
+[  115.384801] Jonggyu: Breakpoint #2 in blk_peek_request
+[  115.384802] Jonggyu: Breakpoint #3 in blk_peek_request
+[  115.384803] Jonggyu: Breakpoint #1 in scsi_prep_fn
+[  115.384805] Jonggyu: Breakpoint #2 in scsi_prep_fn
+[  115.384806] Jonggyu: Breakpoint #3 in scsi_prep_fn
+[  115.384808] Jonggyu: Breakpoint #4 in scsi_prep_fn
+[  115.384810] Jonggyu: Breakpoint #4 req = 18446612199117280256 in blk_peek_request
+[  115.384811] Jonggyu: Breakpoint #1 in blk_peek_request
+[  115.384812] Jonggyu: Breakpoint #2 in blk_peek_request
+[  115.384813] Jonggyu: Breakpoint #3 in blk_peek_request
+[  115.384814] Jonggyu: Breakpoint #1 in scsi_prep_fn
+[  115.384815] Jonggyu: Breakpoint #2 in scsi_prep_fn
+[  115.384816] Jonggyu: Breakpoint #3 in scsi_prep_fn
+[  115.384818] Jonggyu: Breakpoint #4 in scsi_prep_fn
+[  115.384820] Jonggyu: Breakpoint #4 req = 18446612199117282304 in blk_peek_request
+[  115.384821] Jonggyu: Breakpoint #1 in blk_peek_request
+[  115.384822] Jonggyu: Breakpoint #2 in blk_peek_request
+[  115.384823] Jonggyu: Breakpoint #3 in blk_peek_request
+[  115.384824] Jonggyu: Breakpoint #1 in scsi_prep_fn
+[  115.384825] Jonggyu: Breakpoint #2 in scsi_prep_fn
+[  115.384827] Jonggyu: Breakpoint #3 in scsi_prep_fn
+[  115.384828] Jonggyu: Breakpoint #4 in scsi_prep_fn
+[  115.384830] Jonggyu: Breakpoint #4 req = 18446612199117283328 in blk_peek_request
+[  115.384831] Jonggyu: Breakpoint #1 in blk_peek_request
+[  115.384832] Jonggyu: Breakpoint #2 in blk_peek_request
+[  115.384833] Jonggyu: Breakpoint #3 in blk_peek_request
+[  115.384834] Jonggyu: Breakpoint #1 in scsi_prep_fn
+[  115.384835] Jonggyu: Breakpoint #2 in scsi_prep_fn
+[  115.384837] Jonggyu: Breakpoint #3 in scsi_prep_fn
+[  115.384838] Jonggyu: Breakpoint #4 in scsi_prep_fn
+[  115.384840] Jonggyu: Breakpoint #4 req = 18446612199117285376 in blk_peek_request
+[  115.384841] Jonggyu: Breakpoint #1 in blk_peek_request
+[  115.384842] Jonggyu: Breakpoint #2 in blk_peek_request
+[  115.384844] Jonggyu: Breakpoint #3 in blk_peek_request
+[  115.384845] Jonggyu: Breakpoint #1 in scsi_prep_fn
+[  115.384846] Jonggyu: Breakpoint #2 in scsi_prep_fn
+[  115.384847] Jonggyu: Breakpoint #3 in scsi_prep_fn
+[  115.384849] Jonggyu: Breakpoint #4 in scsi_prep_fn
+[  115.384851] Jonggyu: Breakpoint #4 req = 18446612199117286400 in blk_peek_request
+[  115.384852] Jonggyu: Breakpoint #1 in blk_peek_request
+[  115.384853] Jonggyu: Breakpoint #2 in blk_peek_request
+[  115.384854] Jonggyu: Breakpoint #3 in blk_peek_request
+[  115.384855] Jonggyu: Breakpoint #1 in scsi_prep_fn
+[  115.384857] Jonggyu: Breakpoint #2 in scsi_prep_fn
+[  115.384858] Jonggyu: Breakpoint #3 in scsi_prep_fn
+[  115.384859] Jonggyu: Breakpoint #4 in scsi_prep_fn
+[  115.384861] Jonggyu: Breakpoint #4 req = 18446612199117287424 in blk_peek_request
+[  115.384862] Jonggyu: Breakpoint #7 in blk_peek_request
+[  115.384863] Jonggyu: Breakpoint #END in blk_peek_request
+[  115.384868] Jonggyu: In scsi_request_fn, req's address = 18446612199117278208
+[  115.384869] Jonggyu: In scsi_request_fn, req's address = 18446612199117279232
+[  115.384871] Jonggyu: In scsi_request_fn, req's address = 18446612199117280256
+[  115.384872] Jonggyu: In scsi_request_fn, req's address = 18446612199117282304
+[  115.384874] Jonggyu: In scsi_request_fn, req's address = 18446612199117283328
+[  115.384875] Jonggyu: In scsi_request_fn, req's address = 18446612199117285376
+[  115.384877] Jonggyu: In scsi_request_fn, req's address = 18446612199117286400
+[  115.384878] Jonggyu: In scsi_request_fn, req's address = 18446612199117287424
+[  115.386332] Jonggyu: in blk_complete_request, req addr = 18446612199117279232
+[  115.386335] Jonggyu: in __blk_complete_request
+[  115.386336] Jonggyu: in blk_complete_request, finished
+[  115.386338] Jonggyu: in blk_complete_request, req addr = 18446612199117282304
+[  115.386338] Jonggyu: in __blk_complete_request
+[  115.386339] Jonggyu: in blk_complete_request, finished
+[  115.386353] Jonggyu: in blk_complete_request, req addr = 18446612199117278208
+[  115.386354] Jonggyu: in __blk_complete_request
+[  115.386355] Jonggyu: in blk_complete_request, finished
+[  115.386356] Jonggyu: in blk_complete_request, req addr = 18446612199117283328
+[  115.386357] Jonggyu: in __blk_complete_request
+[  115.386358] Jonggyu: in blk_complete_request, finished
+[  115.386385] Jonggyu: in blk_complete_request, req addr = 18446612199117280256
+[  115.386385] Jonggyu: in __blk_complete_request
+[  115.386386] Jonggyu: in blk_complete_request, finished
+[  115.386407] Jonggyu: in blk_complete_request, req addr = 18446612199117285376
+[  115.386409] Jonggyu: in __blk_complete_request
+[  115.386409] Jonggyu: in blk_complete_request, finished
+[  115.386411] Jonggyu: in blk_complete_request, req addr = 18446612199117286400
+[  115.386412] Jonggyu: in __blk_complete_request
+[  115.386413] Jonggyu: in blk_complete_request, finished
+[  115.386418] Jonggyu: in blk_complete_request, req addr = 18446612199117287424
+[  115.386419] Jonggyu: in __blk_complete_request
+[  115.386420] Jonggyu: in blk_complete_request, finished
+[  115.386780]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117287424
+[  115.386782] Jonggyu: Breakpoint #01// In plug
+[  115.386783] Jonggyu: Breakpoint #04// In plug
+[  115.386783]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117286400
+[  115.386785] Jonggyu: Breakpoint #01// In plug
+[  115.386786] Jonggyu: Breakpoint #04// In plug
+[  115.386786]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117285376
+[  115.386788] Jonggyu: Breakpoint #01// In plug
+[  115.386789] Jonggyu: Breakpoint #04// In plug
+[  115.386789]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117280256
+[  115.386791] Jonggyu: Breakpoint #01// In plug
+[  115.386791] Jonggyu: Breakpoint #04// In plug
+[  115.386792]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117283328
+[  115.386793] Jonggyu: Breakpoint #01// In plug
+[  115.386794] Jonggyu: Breakpoint #04// In plug
+[  115.386795]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117278208
+[  115.386797] Jonggyu: Breakpoint #01// In plug
+[  115.386797] Jonggyu: Breakpoint #04// In plug
+[  115.386798]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117282304
+[  115.386799] Jonggyu: Breakpoint #01// In plug
+[  115.386800] Jonggyu: Breakpoint #04// In plug
+[  115.386801]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117279232
+[  115.386802] Jonggyu: Breakpoint #01// In plug
+[  115.386803] Jonggyu: Breakpoint #04// In plug
+[  115.386804]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117288448
+[  115.386805] Jonggyu: Breakpoint #01// In plug
+[  115.386806] Jonggyu: Breakpoint #04// In plug
+[  115.386806] Jonggyu: BLK_END_MAKE_REQUEST
+[  115.386807] Jonggyu: Breakpoint #1 in generic_make_request()
+[  115.386808] Jonggyu: Breakpoint #2 in generic_make_request()
+[  115.386808] Jonggyu: Breakpoint #END in generic_make_request()
+[  115.386811] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117280256
+[  115.386812] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117287424
+[  115.386813] Jonggyu: In SOFT_MERGE IN __elv_add_request
+[  115.386813] Jonggyu: In ELEVATOR_INSERT_SORT IN __elv_add_request
+[  115.386814] Jonggyu: in __elv_add_request, request is mergable
+[  115.386815] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117279232
+[  115.386816] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117278208
+[  115.386817] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117285376
+[  115.386818] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117288448
+[  115.386818] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117282304
+[  115.386819] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117283328
+[  115.386820] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117286400
+[  115.386821] Jonggyu: in blk_flush_plug_list, escape the loop
+[  115.386858]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117265920
+[  115.386860] Jonggyu: Breakpoint #01// In plug
+[  115.386860] Jonggyu: Breakpoint #04// In plug
+[  115.386861]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117268992
+[  115.386862] Jonggyu: Breakpoint #01// In plug
+[  115.386863] Jonggyu: Breakpoint #04// In plug
+[  115.386864]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117267968
+[  115.386865] Jonggyu: Breakpoint #01// In plug
+[  115.386866] Jonggyu: Breakpoint #04// In plug
+[  115.386867]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117264896
+[  115.386868] Jonggyu: Breakpoint #01// In plug
+[  115.386869] Jonggyu: Breakpoint #04// In plug
+[  115.386869]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117263872
+[  115.386871] Jonggyu: Breakpoint #01// In plug
+[  115.386872] Jonggyu: Breakpoint #04// In plug
+[  115.386872]  Jonggyu: In blk_queue_bio, rq's address = 18446612199117262848
+[  115.386875] Jonggyu: Breakpoint #01// In plug
+[  115.386875] Jonggyu: Breakpoint #04// In plug
+[  115.386876] Jonggyu: BLK_END_MAKE_REQUEST
+[  115.386876] Jonggyu: Breakpoint #1 in generic_make_request()
+[  115.386877] Jonggyu: Breakpoint #2 in generic_make_request()
+[  115.386878] Jonggyu: Breakpoint #END in generic_make_request()
+[  115.386880] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117267968
+[  115.386881] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117268992
+[  115.386882] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117262848
+[  115.386883] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117264896
+[  115.386884] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117265920
+[  115.386884] Jonggyu: In SOFT_MERGE IN __elv_add_request
+[  115.386885] Jonggyu: In ELEVATOR_INSERT_SORT IN __elv_add_request
+[  115.386886] Jonggyu: in __elv_add_request, request is mergable
+[  115.386886] Jonggyu: in blk_flush_plug_list, rq's address = 18446612199117263872
+[  115.386887] Jonggyu: in blk_flush_plug_list, escape the loop
+[  195.492791] message
