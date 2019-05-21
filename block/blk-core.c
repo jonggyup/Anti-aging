@@ -2121,17 +2121,19 @@ out_unlock:
      */
   if (bio && bio->fragmented == 100 && bio->frag_list != NULL)
   {
-    bio = bio->frag_list;
-/*    req->frag_num = ori_frag_num;
-    req->fragmented = 1;
+//    req->frag_num = ori_frag_num;
     printk(" Jonggyu: In blk_queue_bio, rq's address = %lu", req);
 
-    if (fragmented == true) {
+    if (fragmented != true) {
+      req->fragmented = 1;
+      fragmented = true;
+    }
+    else {
       prev_req->frag_list = req;
       req->fragmented = 2;
     }
     prev_req = req;
-    fragmented = true; */
+    bio = bio->frag_list;
     goto new; 
   }
 
@@ -3844,10 +3846,10 @@ void blk_flush_plug_list(struct blk_plug *plug, bool from_schedule)
       depth = 0;
       spin_lock(q->queue_lock);
     }
-    if (rq->fragmented == 2) {
+/*    if (rq->fragmented == 2) {
       depth++;
       continue;
-    }
+    }*/
     /*
      * Short-circuit if @q is dead
      */
@@ -3864,7 +3866,10 @@ void blk_flush_plug_list(struct blk_plug *plug, bool from_schedule)
     else
       __elv_add_request(q, rq, ELEVATOR_INSERT_SORT_MERGE);
 
-
+    /* 
+     * Commented by Jonggyu
+     * depth of a request queue does not affect execution.
+     */
     depth++;
   }
   if (fragmented == true)
