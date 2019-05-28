@@ -3868,11 +3868,12 @@ void blk_flush_plug_list(struct blk_plug *plug, bool from_schedule)
     /*
      * rq is already accounted, so use raw insert
      */
+    if (rq->fragmented != 2) {
     if (op_is_flush(rq->cmd_flags))
       __elv_add_request(q, rq, ELEVATOR_INSERT_FLUSH);
     else
       __elv_add_request(q, rq, ELEVATOR_INSERT_SORT_MERGE);
-
+    }
     /* 
      * Commented by Jonggyu
      * depth of a request queue does not affect execution.

@@ -704,6 +704,7 @@ void __elv_add_request(struct request_queue *q, struct request *rq, int where)
 
 	rq->q = q;
 
+
 	if (rq->rq_flags & RQF_SOFTBARRIER) {
 		/* barriers are scheduling boundary, update end_sector */
 		if (!blk_rq_is_passthrough(rq)) {
@@ -762,10 +763,10 @@ void __elv_add_request(struct request_queue *q, struct request *rq, int where)
 	case ELEVATOR_INSERT_SORT:
     if (rq->frag_num != 0)
        printk("Jonggyu: In ELEVATOR_INSERT_SORT IN __elv_add_request");
-
     BUG_ON(blk_rq_is_passthrough(rq));
     rq->rq_flags |= RQF_SORTED;
     q->nr_sorted++;
+
     if (rq_mergeable(rq)) {
       elv_rqhash_add(q, rq);
       if (rq->frag_num != 0)
@@ -774,7 +775,6 @@ void __elv_add_request(struct request_queue *q, struct request *rq, int where)
         q->last_merge = rq;
     }
   
-    if (rq->fragmented != 2)
   		q->elevator->type->ops.sq.elevator_add_req_fn(q, rq);
 
 /*    if (rq->fragmented == 1)
