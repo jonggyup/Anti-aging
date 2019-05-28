@@ -3827,6 +3827,7 @@ void blk_flush_plug_list(struct blk_plug *plug, bool from_schedule)
   local_irq_save(flags);
   while (!list_empty(&list)) {
     rq = list_entry_rq(list.next);
+    
     /* 
      * Added by Jonggyu
      * The following printk denotes whether it's from schedule() or not
@@ -3838,6 +3839,10 @@ void blk_flush_plug_list(struct blk_plug *plug, bool from_schedule)
     }
 
     list_del_init(&rq->queuelist);
+
+    if (rq->fragmented == 2)
+      continue;
+
     BUG_ON(!rq->q);
     if (rq->q != q) {
       if (rq->frag_num != 0)
@@ -3869,10 +3874,12 @@ void blk_flush_plug_list(struct blk_plug *plug, bool from_schedule)
      * rq is already accounted, so use raw insert
      */
     if (rq->fragmented != 2) {
+
     if (op_is_flush(rq->cmd_flags))
       __elv_add_request(q, rq, ELEVATOR_INSERT_FLUSH);
     else
       __elv_add_request(q, rq, ELEVATOR_INSERT_SORT_MERGE);
+
     }
     /* 
      * Commented by Jonggyu
