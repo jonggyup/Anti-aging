@@ -126,6 +126,11 @@ void blk_rq_init(struct request_queue *q, struct request *rq)
   rq->start_time = jiffies;
   set_start_time_ns(rq);
   rq->part = NULL;
+  /* 
+   * Added by Jonggyu
+   */
+  rq->fragmented = 0;
+  rq->frag_list = NULL;
 }
 EXPORT_SYMBOL(blk_rq_init);
 
@@ -2121,7 +2126,7 @@ out_unlock:
      */
   if (bio && bio->fragmented == 100 && bio->frag_list != NULL)
   {
-//    req->frag_num = ori_frag_num;
+    req->frag_num = ori_frag_num;
     printk(" Jonggyu: In blk_queue_bio, rq's address = %lu", req);
 
     if (fragmented != true) {
@@ -2785,13 +2790,15 @@ void blk_account_io_done(struct request *req)
  */
 static bool blk_pm_allow_request(struct request *rq)
 {
+  /* Deleted by Jonggyu */
+  /*
   switch (rq->q->rpm_status) {
     case RPM_RESUMING:
     case RPM_SUSPENDING:
       return rq->rq_flags & RQF_PM;
     case RPM_SUSPENDED:
       return false;
-  }
+  }*/
 
   return true;
 }
@@ -2850,6 +2857,9 @@ static struct request *elv_next_request(struct request_queue *q)
      * Iterating dispatch queue
      */
     list_for_each_entry(rq, &q->queue_head, queuelist) {
+      if (rq != NULL && (rq->fragmented == 1 ||rq->fragmented ==2))
+        printk ("In elv_next_request, frag rq is detectred");
+
       if (blk_pm_allow_request(rq))
         return rq;
 
@@ -2899,7 +2909,7 @@ static struct request *elv_next_request(struct request_queue *q)
 struct request *blk_peek_request(struct request_queue *q)
 {
   struct request *rq;
-  struct request *iter_rq;
+  struct request *ori_rq;
   int ret;
   int fragmented = 0; // Added by Jonggyu to indicate if the io is fragmented or not.
 
@@ -2907,142 +2917,139 @@ struct request *blk_peek_request(struct request_queue *q)
   WARN_ON_ONCE(q->mq_ops);
 
   while ((rq = elv_next_request(q)) != NULL) {
-    fragmented = rq->frag_num;
-    iter_rq = rq;
-
+    ori_rq = rq;
 again:
-      if (!(rq->rq_flags & RQF_STARTED)) {
+    if (!(rq->rq_flags & RQF_STARTED)) {
 
-        /*
-         * This is the first time the device driver
-         * sees this request (possibly after
-         * requeueing).  Notify IO scheduler.
-         */
-        if (rq->frag_num != 0) //
-          printk("Jonggyu: Breakpoint #1 in blk_peek_request"); //
-
-        if (rq->rq_flags & RQF_SORTED)
-          elv_activate_rq(q, rq);
-
-        if (rq->frag_num != 0) //
-          printk("Jonggyu: Breakpoint #2 in blk_peek_request"); //
-
-
-        /*
-         * just mark as started even if we don't start
-         * it, a request that has been delayed should
-         * not be passed by new incoming requests
-         */
-        rq->rq_flags |= RQF_STARTED;
-        trace_block_rq_issue(q, rq);
-      }
-
-      if (!q->boundary_rq || q->boundary_rq == rq) {
-        q->end_sector = rq_end_sector(rq);
-        q->boundary_rq = NULL;
-      }
-
-      if (rq->frag_num != 0) //
-        printk("Jonggyu: Breakpoint #3 in blk_peek_request"); //
-
-
-      if (rq->rq_flags & RQF_DONTPREP)
-        break;
-
-      if (q->dma_drain_size && blk_rq_bytes(rq)) {
-        /*
-         * make sure space for the drain appears we
-         * know we can do this because max_hw_segments
-         * has been adjusted to be one fewer than the
-         * device can handle
-         */
-        rq->nr_phys_segments++;
-        if (rq->frag_num != 0) //
-          printk("Jonggyu: in nr_phys_segments++ in blk_peek_request"); //
-
-      }
-
-      if (!q->prep_rq_fn)
-        break;
-      /* Commented by Jonggyu
-       * q->prep_rq_fn is directed to scsi_prep_fn
-       */
-
-      /*    while (iter_rq->frag_list != NULL && (iter_rq->fragmented == 1 || iter_rq->fragmented ==2)) //
-            {
-            printk ("Jonggyu: in blk_peek_request, flag setting, rq's address = %lu", iter_rq);
-            iter_rq = iter_rq->frag_list; //
-            iter_rq->rq_flags |= rq->rq_flags;
-            q->prep_rq_fn(q, iter_rq); //
-            }
-            */
-      ret = q->prep_rq_fn(q, rq);
-      if (rq->frag_num != 0) //
-        printk("Jonggyu: Breakpoint #4 req = %lu in blk_peek_request", rq); //
-      
       /*
-       * Added by Jonggyu
+       * This is the first time the device driver
+       * sees this request (possibly after
+       * requeueing).  Notify IO scheduler.
        */
-      //
-/*      if (rq->frag_list != NULL && (rq->fragmented == 1 || rq->fragmented == 2))
-      {
-        rq = rq->frag_list;
-        goto again;
-      }
-      rq = iter_rq;
-*/
+      if (rq->frag_num != 0) //
+        printk("Jonggyu: Breakpoint #1 in blk_peek_request"); //
 
-    
-      if (ret == BLKPREP_OK) {
-        break;
-      } else if (ret == BLKPREP_DEFER) {
-        if (rq->frag_num != 0) //
-          printk("Jonggyu: Breakpoint #5 in blk_peek_request"); //
+      if (rq->rq_flags & RQF_SORTED)
+        elv_activate_rq(q, rq);
 
+      if (rq->frag_num != 0) //
+        printk("Jonggyu: Breakpoint #2 in blk_peek_request"); //
+
+
+      /*
+       * just mark as started even if we don't start
+       * it, a request that has been delayed should
+       * not be passed by new incoming requests
+       */
+      rq->rq_flags |= RQF_STARTED;
+      trace_block_rq_issue(q, rq);
+    }
+
+    if (!q->boundary_rq || q->boundary_rq == rq) {
+      q->end_sector = rq_end_sector(rq);
+      q->boundary_rq = NULL;
+    }
+
+    if (rq->frag_num != 0) //
+      printk("Jonggyu: Breakpoint #3 in blk_peek_request"); //
+
+
+    if (rq->rq_flags & RQF_DONTPREP)
+      break;
+
+    if (q->dma_drain_size && blk_rq_bytes(rq)) {
+      /*
+       * make sure space for the drain appears we
+       * know we can do this because max_hw_segments
+       * has been adjusted to be one fewer than the
+       * device can handle
+       */
+      rq->nr_phys_segments++;
+      if (rq->frag_num != 0) //
+        printk("Jonggyu: in nr_phys_segments++ in blk_peek_request"); //
+
+    }
+
+    if (!q->prep_rq_fn)
+      break;
+    /* Commented by Jonggyu
+     * q->prep_rq_fn is directed to scsi_prep_fn
+     */
+
+    /*    while (iter_rq->frag_list != NULL && (iter_rq->fragmented == 1 || iter_rq->fragmented ==2)) //
+          {
+          printk ("Jonggyu: in blk_peek_request, flag setting, rq's address = %lu", iter_rq);
+          iter_rq = iter_rq->frag_list; //
+          iter_rq->rq_flags |= rq->rq_flags;
+          q->prep_rq_fn(q, iter_rq); //
+          }
+          */
+    ret = q->prep_rq_fn(q, rq);
+    if (rq->frag_num != 0) //
+      printk("Jonggyu: Breakpoint #4 req = %lu in blk_peek_request", rq); //
+
+
+
+
+    if (ret == BLKPREP_OK) {
+      break;
+    } else if (ret == BLKPREP_DEFER) {
+      if (rq->fragmented == 1 || rq->fragmented ==2) //
+        printk("Jonggyu: Breakpoint #5 in blk_peek_request"); //
+
+      /*
+       * the request may have been (partially) prepped.
+       * we need to keep this request in the front to
+       * avoid resource deadlock.  RQF_STARTED will
+       * prevent other fs requests from passing this one.
+       */
+      if (q->dma_drain_size && blk_rq_bytes(rq) &&
+          !(rq->rq_flags & RQF_DONTPREP)) {
         /*
-         * the request may have been (partially) prepped.
-         * we need to keep this request in the front to
-         * avoid resource deadlock.  RQF_STARTED will
-         * prevent other fs requests from passing this one.
+         * remove the space for the drain we added
+         * so that we don't add it again
          */
-        if (q->dma_drain_size && blk_rq_bytes(rq) &&
-            !(rq->rq_flags & RQF_DONTPREP)) {
-          /*
-           * remove the space for the drain we added
-           * so that we don't add it again
-           */
-          --rq->nr_phys_segments;
-        }
-
-        rq = NULL;
-        break;
-      } else if (ret == BLKPREP_KILL || ret == BLKPREP_INVALID) {
-        rq->rq_flags |= RQF_QUIET;
-        /*
-         * Mark this request as started so we don't trigger
-         * any debug logic in the end I/O path.
-         */
-        blk_start_request(rq);
-        if (rq->frag_num != 0) //
-          printk("Jonggyu: Breakpoint #6 in blk_peek_request"); //
-
-        __blk_end_request_all(rq, ret == BLKPREP_INVALID ?
-            BLK_STS_TARGET : BLK_STS_IOERR);
-      } else {
-        printk(KERN_ERR "%s: bad return=%d\n", __func__, ret);
-        break;
+        --rq->nr_phys_segments;
       }
+
+      rq = NULL;
+      break;
+    } else if (ret == BLKPREP_KILL || ret == BLKPREP_INVALID) {
+      rq->rq_flags |= RQF_QUIET;
+      /*
+       * Mark this request as started so we don't trigger
+       * any debug logic in the end I/O path.
+       */
+      blk_start_request(rq);
+      if (rq->frag_num != 0) //
+        printk("Jonggyu: Breakpoint #6 in blk_peek_request"); //
+
+      __blk_end_request_all(rq, ret == BLKPREP_INVALID ?
+          BLK_STS_TARGET : BLK_STS_IOERR);
+    } else {
+      printk(KERN_ERR "%s: bad return=%d\n", __func__, ret);
+      break;
+    }
+    /*
+     * Added by Jonggyu
+     */
+    //
+//    if (rq->frag_list != NULL && (rq->fragmented == 1 || rq->fragmented == 2))
+    if (rq->fragmented == 2)
+    {
+      printk("in iteration of blk_peek_request, req = %lu, fragmented = %d", rq, rq->fragmented);
+//    rq = NULL;
+//      rq = rq->frag_list;
+//      goto again;
+    }
+//    rq = ori_rq;
+
   }
   /* Commented by Jonggyu
    * Apparently, the request stucture is freed before here 
    * so accessing requests can incur null pointer exception.
    */
-  if(fragmented > 0) {//
-    printk("Jonggyu: Breakpoint #7 in blk_peek_request"); //
-    printk("Jonggyu: Breakpoint #END in blk_peek_request"); //
-    rq = iter_rq;
-    return rq;
-  }
+
   return rq;
 }
 EXPORT_SYMBOL(blk_peek_request);
@@ -3853,10 +3860,10 @@ void blk_flush_plug_list(struct blk_plug *plug, bool from_schedule)
     /*
      * Short-circuit if @q is dead
      */
-/*    if (unlikely(blk_queue_dying(q))) {
+    if (unlikely(blk_queue_dying(q))) {
       __blk_end_request_all(rq, BLK_STS_IOERR);
       continue;
-    }*/
+    }
 
     /*
      * rq is already accounted, so use raw insert

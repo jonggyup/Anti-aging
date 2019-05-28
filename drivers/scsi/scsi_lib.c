@@ -641,7 +641,10 @@ static bool scsi_end_request(struct request *req, blk_status_t error,
 
 	if (blk_update_request(req, error, bytes))
 		return true;
-
+  if (req->fragmented == 1 || req->fragmented == 2)
+  {
+    printk("Something happened in scsi_end_request");
+  }
 	/* Bidi request must be completed as a whole */
 	if (unlikely(bidi_bytes) &&
 	    blk_update_request(req->next_rq, error, bidi_bytes))
@@ -1352,7 +1355,7 @@ scsi_prep_return(struct request_queue *q, struct request *req, int ret)
 	return ret;
 }
 /* Commented by Jonggyu
- * this func seems to be connecteed to q->prep_rq_fn in blk_peek_request 
+ * this func seems to be connected to q->prep_rq_fn in blk_peek_request 
  */
 static int scsi_prep_fn(struct request_queue *q, struct request *req)
 {
@@ -1741,7 +1744,7 @@ static int scsi_dispatch_cmd(struct scsi_cmnd *cmd)
 	cmd->scsi_done(cmd);
 
   if(cmd->request->frag_num != 0)
-    printk("Jonggyu: Fragmented I/O (addr = %lu) is finished ", cmd->request);
+    printk("Jonggyu: Fragmented I/O (addr = %lu) is finished in goto done", cmd->request);
 	return 0;
 }
 
@@ -1783,7 +1786,7 @@ static void scsi_request_fn(struct request_queue *q)
 	struct scsi_device *sdev = q->queuedata;
 	struct Scsi_Host *shost;
 	struct scsi_cmnd *cmd;
-	struct request *req, *tmp;
+	struct request *req, *ori_req;
 
 	/*
 	 * To start with, we keep looping until the queue is empty, or until
@@ -1798,8 +1801,13 @@ static void scsi_request_fn(struct request_queue *q)
      * accept it.
      */
     req = blk_peek_request(q);
-    if (!req)
+    ori_req = req;
+
+again:    
+    if (!req) {
+//      printk ("!req is detected in scsi_request_fn");
       break;
+    }
       if (unlikely(!scsi_device_online(sdev))) {
         sdev_printk(KERN_ERR, sdev,
             "rejecting I/O to offline device\n");
@@ -1808,16 +1816,23 @@ static void scsi_request_fn(struct request_queue *q)
       }
 
 
-      if (!scsi_dev_queue_ready(q, sdev))
+      if (!scsi_dev_queue_ready(q, sdev)) {
+        if (req->fragmented == 1 || req->fragmented ==2 ) {
+         printk ("Jonggyu: Breakpoint #1 in scsi_request_fn");
+        }
         break;
-
-//      while (req != NULL) { //
+      }
 
       /*
        * Remove the request from the request list.
        */
-      if (!(blk_queue_tagged(q) && !blk_queue_start_tag(q, req)))
+      if (!(blk_queue_tagged(q) && !blk_queue_start_tag(q, req))) {
+        if (req->fragmented == 1 || req->fragmented ==2 ) {
+         printk ("Jonggyu: Breakpoint #1 in scsi_request_fn");
+        }
         blk_start_request(req);
+
+      }
 
       spin_unlock_irq(q->queue_lock);
       cmd = blk_mq_rq_to_pdu(req);
@@ -1879,24 +1894,15 @@ static void scsi_request_fn(struct request_queue *q)
       /*
        * Added by Jonggyu
        */
-/*      if (req->fragmented == 1)
-      {
-        tmp = req;
-        while (req != NULL)
-        {
-          printk("Jonggyu: In scsi_request_fn, req's address = %lu", req);
-          req = req->frag_list;
-        }
-        req = tmp;
-      }
 
-      if (req->fragmented == 1 || req->fragmented ==2) {
-        req = req->frag_list; //
+      if(req != NULL && (req->fragmented == 1 || req->fragmented == 2))
+      {
+        printk ("frag req is detected, req = %lu", req);
+//        req = req->frag_list;
+//        goto again;
       }
-      else
-        break;
-    } //
-    */
+      req = ori_req;
+
   } 
 	return;
 
@@ -1912,15 +1918,15 @@ static void scsi_request_fn(struct request_queue *q)
 	 * cases (host limits or settings) should run the queue at some
 	 * later time.
 	 */
-//  if (req->frag_num != 0)
-//    printk ("the request (Address = %lu) is not ready", req);
+  if (req != NULL && req->frag_num != 0)
+    printk ("the request (Address = %lu) is not ready", req);
 
 	spin_lock_irq(q->queue_lock);
 	blk_requeue_request(q, req);
 	atomic_dec(&sdev->device_busy);
 out_delay:
-//  if (req->frag_num != 0)
-//    printk ("the request (Address = %lu) is delayed", req);
+  if (req != NULL && req->frag_num != 0)
+    printk ("the request (Address = %lu) is delayed", req);
 
 	if (!atomic_read(&sdev->device_busy) && !scsi_device_blocked(sdev))
 		blk_delay_queue(q, SCSI_QUEUE_DELAY);

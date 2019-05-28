@@ -26,8 +26,15 @@ static int noop_dispatch(struct request_queue *q, int force)
 
   rq = list_first_entry_or_null(&nd->queue, struct request, queuelist);
   if (rq) {
+again:
     list_del_init(&rq->queuelist);
     elv_dispatch_sort(q, rq);
+//    if (rq->frag_list != NULL && (rq->fragmented ==1 || rq->fragmented ==2))
+//    {
+//      printk ("Jonggyu: in noop_dispatch, rq = %lu", rq);
+//      rq = rq->frag_list;
+//      goto again;
+//    }
     return 1;
   }
   return 0;

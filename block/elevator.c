@@ -398,8 +398,9 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
   struct request *iter_rq;
   int i = 0;
 
-
-	if (q->last_merge == rq)
+again:
+	
+  if (q->last_merge == rq)
 		q->last_merge = NULL;
   
   /* If the request is not fragmented or not the first one,
@@ -418,6 +419,7 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
     }
   }
   */
+
 	boundary = q->end_sector;
 	list_for_each_prev(entry, &q->queue_head) {
     struct request *pos = list_entry_rq(entry); //
@@ -461,7 +463,15 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
     q->boundary_rq = rq;
   }
   else*/
+//  if (rq->fragmented != 2)
     list_add(&rq->queuelist, entry);
+    if (rq->frag_list !=NULL && (rq->fragmented ==1 || rq->fragmented ==2))
+    {
+      rq = rq->frag_list;
+      list_del_init(&rq->queuelist);
+      goto again;
+    }
+    
 }
 EXPORT_SYMBOL(elv_dispatch_sort);
 
@@ -763,8 +773,9 @@ void __elv_add_request(struct request_queue *q, struct request *rq, int where)
       if (!q->last_merge)
         q->last_merge = rq;
     }
-
-		q->elevator->type->ops.sq.elevator_add_req_fn(q, rq);
+  
+    if (rq->fragmented != 2)
+  		q->elevator->type->ops.sq.elevator_add_req_fn(q, rq);
 
 /*    if (rq->fragmented == 1)
     {
