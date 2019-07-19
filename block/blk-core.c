@@ -401,10 +401,8 @@ inline void __blk_run_queue_uncond(struct request_queue *q)
   WARN_ON_ONCE(q->mq_ops);
 
   /* Modified by Jonggyu */
-  if (unlikely(blk_queue_dead(q))) {
-    printk("Jonggyu: in __blk_run_queue_uncond, queue is dead");
+  if (unlikely(blk_queue_dead(q)))
     return;
-  }
   /*
    * Some request_fn implementations, e.g. scsi_request_fn(), unlock
    * the queue lock internally. As a result multiple threads may be
@@ -430,10 +428,9 @@ void __blk_run_queue(struct request_queue *q)
   lockdep_assert_held(q->queue_lock);
   WARN_ON_ONCE(q->mq_ops);
 
-  if (unlikely(blk_queue_stopped(q))){
-    printk("Jonggyu: queue is stooped in __blk_run_queue");
+  if (unlikely(blk_queue_stopped(q)))
     return;
-  }
+  
 
   __blk_run_queue_uncond(q);
 }
@@ -1398,6 +1395,10 @@ fail_elvpriv:
   spin_lock_irq(q->queue_lock);
   q->nr_rqs_elvpriv--;
   spin_unlock_irq(q->queue_lock);
+
+  /* Added by Jonggyu */
+  printk ("fail_elvpriv");
+
   goto out;
 
 fail_alloc:
@@ -1411,6 +1412,7 @@ fail_alloc:
   spin_lock_irq(q->queue_lock);
   freed_request(rl, is_sync, rq_flags);
 
+  printk ("fail_alloc");
   /*
    * in the very unlikely event that allocation failed and no
    * requests for this direction was pending, mark us starved so that
@@ -1421,6 +1423,9 @@ fail_alloc:
 rq_starved:
   if (unlikely(rl->count[is_sync] == 0))
     rl->starved[is_sync] = 1;
+
+  printk ("rq_starved");
+
   return ERR_PTR(-ENOMEM);
 }
 
@@ -1919,6 +1924,7 @@ void blk_init_request_from_bio(struct request *req, struct bio *bio)
   /* Added by Jonggyu */
   req->frag_list = NULL;
   req->frag_num = 0;
+  req->fragmented = 0;
   //
 }
 EXPORT_SYMBOL_GPL(blk_init_request_from_bio);
@@ -1934,8 +1940,8 @@ static blk_qc_t blk_queue_bio(struct request_queue *q, struct bio *bio)
   bool fragmented = false;
   int frag_num = bio->frag_num;
   int ori_frag_num = frag_num;
-  struct request *ori_req, *iter_req;
-  int i = 0;
+  struct request *ori_req;
+//  int i = 0;
 
   /*
    * low level driver can indicate that it wants pages above a
@@ -1945,6 +1951,7 @@ static blk_qc_t blk_queue_bio(struct request_queue *q, struct bio *bio)
 
 
   blk_queue_bounce(q, &bio);
+
 
   if (bio->fragmented != 100)
     blk_queue_split(q, &bio);
@@ -2004,11 +2011,11 @@ get_rq:
    * Grab a free request. This is might sleep but can not fail.
    * Returns with the queue unlocked.
    */
+new:
 
   if (fragmented == false)
     blk_queue_enter_live(q);
 
-new:
   if (fragmented == true)
     spin_lock_irq(q->queue_lock);
 
@@ -2028,6 +2035,8 @@ new:
       bio->bi_status = BLK_STS_IOERR;
     bio_endio(bio);
     goto out_unlock;
+
+    printk ("req error");
   }
   wbt_track(&req->issue_stat, wb_acct);
 
@@ -2074,8 +2083,8 @@ new:
   plug = current->plug;
 
   if (plug) {
-    if (fragmented == true)
-      printk("Jonggyu: Breakpoint #01// In plug");
+//    if (fragmented == true)
+//      printk("Jonggyu: Breakpoint #01// In plug");
 
     /*
      * 
@@ -2088,28 +2097,28 @@ new:
     if (!request_count || list_empty(&plug->list))
       trace_block_plug(q);
     else {
-      if (fragmented == true)
-        printk("Jonggyu: Breakpoint #02// In plug");
+//      if (fragmented == true)
+//        printk("Jonggyu: Breakpoint #02// In plug");
 
       struct request *last = list_entry_rq(plug->list.prev);
       if (request_count >= BLK_MAX_REQUEST_COUNT ||
           blk_rq_bytes(last) >= BLK_PLUG_FLUSH_SIZE) {
         blk_flush_plug_list(plug, false);
         trace_block_plug(q);
-        if (fragmented == true)
-          printk("Jonggyu: Breakpoint #03// In plug");
+//        if (fragmented == true)
+//          printk("Jonggyu: Breakpoint #03// In plug");
 
       }
     }
     list_add_tail(&req->queuelist, &plug->list);
     blk_account_io_start(req, true);
-    if (fragmented == true)
-      printk("Jonggyu: Breakpoint #04// In plug");
+//    if (fragmented == true)
+//      printk("Jonggyu: Breakpoint #04// In plug");
   } else {
     spin_lock_irq(q->queue_lock);
     add_acct_request(q, req, where);
-    if (fragmented == true)
-      printk("Jonggyu: Breakpoint #05// In plug");
+//    if (fragmented == true)
+//      printk("Jonggyu: Breakpoint #05// In plug");
 
     __blk_run_queue(q);
 out_unlock:
@@ -2127,7 +2136,7 @@ out_unlock:
   if (bio && bio->fragmented == 100 && bio->frag_list != NULL)
   {
     req->frag_num = ori_frag_num;
-    printk(" Jonggyu: In blk_queue_bio, rq's address = %lu", req);
+//    printk(" Jonggyu: In blk_queue_bio, rq's address = %lu", req);
 
     if (fragmented != true) {
       req->fragmented = 1;
@@ -2142,8 +2151,8 @@ out_unlock:
     goto new; 
   }
 
-  if(fragmented == true)
-    printk("Jonggyu: BLK_END_MAKE_REQUEST");
+//  if(fragmented == true)
+//    printk("Jonggyu: BLK_END_MAKE_REQUEST");
 
   return BLK_QC_T_NONE;
 }
@@ -2453,13 +2462,13 @@ blk_qc_t generic_make_request(struct bio *bio)
       ret = q->make_request_fn(q, bio);
 
       /* Added by Jonggyu */
-      if (bio->fragmented == 100)
-        printk("Jonggyu: Breakpoint #1 in generic_make_request()");
+//      if (bio->fragmented == 100)
+//        printk("Jonggyu: Breakpoint #1 in generic_make_request()");
 
       blk_queue_exit(q);
 
-      if (bio->fragmented == 100)
-        printk("Jonggyu: Breakpoint #2 in generic_make_request()");
+//      if (bio->fragmented == 100)
+//        printk("Jonggyu: Breakpoint #2 in generic_make_request()");
 
       /* sort new bios into those for a lower level
        * and those for the same level
@@ -2496,8 +2505,8 @@ blk_qc_t generic_make_request(struct bio *bio)
   current->bio_list = NULL; /* deactivate */
 
 out:
-  if (fragmented == true)
-    printk("Jonggyu: Breakpoint #END in generic_make_request()");
+//  if (fragmented == true)
+//    printk("Jonggyu: Breakpoint #END in generic_make_request()");
 
   return ret;
 }
@@ -2857,9 +2866,6 @@ static struct request *elv_next_request(struct request_queue *q)
      * Iterating dispatch queue
      */
     list_for_each_entry(rq, &q->queue_head, queuelist) {
-      if (rq != NULL && (rq->fragmented == 1 ||rq->fragmented ==2))
-        printk ("In elv_next_request, frag rq is detectred");
-
       if (blk_pm_allow_request(rq))
         return rq;
 
@@ -2911,7 +2917,7 @@ struct request *blk_peek_request(struct request_queue *q)
   struct request *rq;
   struct request *ori_rq;
   int ret;
-  int fragmented = 0; // Added by Jonggyu to indicate if the io is fragmented or not.
+//  int fragmented = 0; // Added by Jonggyu to indicate if the io is fragmented or not.
 
   lockdep_assert_held(q->queue_lock);
   WARN_ON_ONCE(q->mq_ops);
@@ -2926,14 +2932,14 @@ again:
        * sees this request (possibly after
        * requeueing).  Notify IO scheduler.
        */
-      if (rq->frag_num != 0) //
-        printk("Jonggyu: Breakpoint #1 in blk_peek_request"); //
+//      if (rq->frag_num != 0) //
+//        printk("Jonggyu: Breakpoint #1 in blk_peek_request"); //
 
       if (rq->rq_flags & RQF_SORTED)
         elv_activate_rq(q, rq);
 
-      if (rq->frag_num != 0) //
-        printk("Jonggyu: Breakpoint #2 in blk_peek_request"); //
+//      if (rq->frag_num != 0) //
+//        printk("Jonggyu: Breakpoint #2 in blk_peek_request"); //
 
 
       /*
@@ -2950,8 +2956,8 @@ again:
       q->boundary_rq = NULL;
     }
 
-    if (rq->frag_num != 0) //
-      printk("Jonggyu: Breakpoint #3 in blk_peek_request"); //
+//    if (rq->frag_num != 0) //
+//      printk("Jonggyu: Breakpoint #3 in blk_peek_request"); //
 
 
     if (rq->rq_flags & RQF_DONTPREP)
@@ -2965,8 +2971,8 @@ again:
        * device can handle
        */
       rq->nr_phys_segments++;
-      if (rq->frag_num != 0) //
-        printk("Jonggyu: in nr_phys_segments++ in blk_peek_request"); //
+//      if (rq->frag_num != 0) //
+//        printk("Jonggyu: in nr_phys_segments++ in blk_peek_request"); //
 
     }
 
@@ -2985,12 +2991,16 @@ again:
           }
           */
     ret = q->prep_rq_fn(q, rq);
-    if (rq->frag_num != 0) //
-      printk("Jonggyu: Breakpoint #4 req = %lu in blk_peek_request", rq); //
+//    if (rq->frag_num != 0) //
+//      printk("Jonggyu: Breakpoint #4 req = %lu in blk_peek_request", rq); //
 
-
-
-
+/*    if (rq->frag_list != NULL && (rq->fragmented == 1 || rq->fragmented == 2))
+    {
+      rq = rq->frag_list;
+      goto again;
+    }
+    rq = ori_rq;
+*/
     if (ret == BLKPREP_OK) {
       break;
     } else if (ret == BLKPREP_DEFER) {
@@ -3035,20 +3045,16 @@ again:
      */
     //
 //    if (rq->frag_list != NULL && (rq->fragmented == 1 || rq->fragmented == 2))
-    if (rq->fragmented == 2)
-    {
-      printk("in iteration of blk_peek_request, req = %lu, fragmented = %d", rq, rq->fragmented);
+//    if (rq->fragmented == 2)
+//    {
+//      printk("in iteration of blk_peek_request, req = %lu, fragmented = %d", rq, rq->fragmented);
 //    rq = NULL;
 //      rq = rq->frag_list;
 //      goto again;
-    }
+//    }
 //    rq = ori_rq;
 
   }
-  /* Commented by Jonggyu
-   * Apparently, the request stucture is freed before here 
-   * so accessing requests can incur null pointer exception.
-   */
 
   return rq;
 }
@@ -3127,8 +3133,8 @@ struct request *blk_fetch_request(struct request_queue *q)
     blk_start_request(rq);
 
   /* Added by Jonggyu */
-  if (rq->frag_num != 0)
-    printk("Jonggyu: in blk_fetch_request");
+//  if (rq->frag_num != 0)
+//    printk("Jonggyu: in blk_fetch_request");
   return rq;
 }
 EXPORT_SYMBOL(blk_fetch_request);
@@ -3429,8 +3435,8 @@ void blk_end_request_all(struct request *rq, blk_status_t error)
   unsigned int bidi_bytes = 0;
 
   /* Added by Jonggyu */
-  if (rq->frag_num != 0)
-    printk("Jonggyu: in blk_end_request_all");
+//  if (rq->frag_num != 0)
+//    printk("Jonggyu: in blk_end_request_all");
 
   if (unlikely(blk_bidi_rq(rq)))
     bidi_bytes = blk_rq_bytes(rq->next_rq);
@@ -3803,7 +3809,7 @@ void blk_flush_plug_list(struct blk_plug *plug, bool from_schedule)
   struct request *rq;
   LIST_HEAD(list);
   unsigned int depth;
-  int fragmented = false;
+//  int fragmented = false;
 
   flush_plug_callbacks(plug, from_schedule);
 
@@ -3832,23 +3838,20 @@ void blk_flush_plug_list(struct blk_plug *plug, bool from_schedule)
      * Added by Jonggyu
      * The following printk denotes whether it's from schedule() or not
      */
-    if (rq->frag_num != 0)
-    {
-      printk("Jonggyu: in blk_flush_plug_list, rq's address = %lu", rq);
-      fragmented = true;
-    }
+//    if (rq->frag_num != 0)
+//    {
+//      printk("Jonggyu: in blk_flush_plug_list, rq's address = %lu", rq);
+//    }
 
     list_del_init(&rq->queuelist);
 
-    if (rq->fragmented == 2)
-      continue;
 
     BUG_ON(!rq->q);
     if (rq->q != q) {
-      if (rq->frag_num != 0)
-      {
-        printk("Jonggyu: in blk_flush_plug_list, rq->q != q");
-      }
+//      if (rq->frag_num != 0)
+//      {
+//        printk("Jonggyu: in blk_flush_plug_list, rq->q != q");
+//      }
       /*
        * This drops the queue lock
        */
@@ -3858,6 +3861,10 @@ void blk_flush_plug_list(struct blk_plug *plug, bool from_schedule)
       depth = 0;
       spin_lock(q->queue_lock);
     }
+
+    if (rq->fragmented == 2)
+      continue;
+
 /*    if (rq->fragmented == 2) {
       depth++;
       continue;
@@ -3866,32 +3873,34 @@ void blk_flush_plug_list(struct blk_plug *plug, bool from_schedule)
      * Short-circuit if @q is dead
      */
     if (unlikely(blk_queue_dying(q))) {
+      printk("INNNNNNNNNNNNNNNNNNNNN blk_queue_dying");
       __blk_end_request_all(rq, BLK_STS_IOERR);
+
       continue;
     }
 
     /*
      * rq is already accounted, so use raw insert
      */
-    if (rq->fragmented != 2) {
+//    if (rq->fragmented != 2) {
 
     if (op_is_flush(rq->cmd_flags))
       __elv_add_request(q, rq, ELEVATOR_INSERT_FLUSH);
     else
       __elv_add_request(q, rq, ELEVATOR_INSERT_SORT_MERGE);
 
-    }
+//    }
     /* 
      * Commented by Jonggyu
      * depth of a request queue does not affect execution.
      */
     depth++;
   }
-  if (fragmented == true)
+/*  if (fragmented == true)
   {
     printk("Jonggyu: in blk_flush_plug_list, escape the loop");
   }
-
+*/
 
   /*
    * This drops the queue lock

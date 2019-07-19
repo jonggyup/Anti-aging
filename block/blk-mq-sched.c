@@ -116,7 +116,17 @@ static void blk_mq_do_dispatch_sched(struct blk_mq_hw_ctx *hctx)
 		 * if this rq won't be queued to driver via .queue_rq()
 		 * in blk_mq_dispatch_rq_list().
 		 */
-		list_add(&rq->queuelist, &rq_list);
+
+    if (rq->fragmented == 1)
+    {
+      while (rq){
+    		list_add(&rq->queuelist, &rq_list);
+        rq = rq->frag_list;
+      }
+    }
+    else
+      list_add(&rq->queuelist, &rq_list);
+
 	} while (blk_mq_dispatch_rq_list(q, &rq_list, true));
 }
 
@@ -166,6 +176,16 @@ static void blk_mq_do_dispatch_ctx(struct blk_mq_hw_ctx *hctx)
 
 		/* round robin for fair dispatch */
 		ctx = blk_mq_next_ctx(hctx, rq->mq_ctx);
+    
+    if (rq->fragmented == 1 || rq->fragmented == 2)
+    {
+      while (rq->frag_list) {
+        rq = rq->frag_list;
+    		list_add(&rq->queuelist, &rq_list);
+    		ctx = blk_mq_next_ctx(hctx, rq->mq_ctx);
+      }
+    }
+
 
 	} while (blk_mq_dispatch_rq_list(q, &rq_list, true));
 

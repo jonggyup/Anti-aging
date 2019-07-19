@@ -1553,6 +1553,9 @@ void blk_mq_flush_plug_list(struct blk_plug *plug, bool from_schedule)
 			this_q = rq->q;
 			depth = 0;
 		}
+    /* Added by Jonggyu */
+    if (rq->fragmented == 2)
+      continue;
 
 		depth++;
 		list_add_tail(&rq->queuelist, &ctx_list);
@@ -1678,7 +1681,10 @@ static blk_qc_t blk_mq_make_request(struct request_queue *q, struct bio *bio)
 	struct blk_plug *plug;
 	struct request *same_queue_rq = NULL;
 	blk_qc_t cookie;
+  blk_qc_t ori_cookie;
 	unsigned int wb_acct;
+  struct request *prev_rq = NULL;
+  bool fragmented = false;
 
 	blk_queue_bounce(q, &bio);
 
@@ -1698,6 +1704,14 @@ static blk_qc_t blk_mq_make_request(struct request_queue *q, struct bio *bio)
 
 	trace_block_getrq(q, bio, bio->bi_opf);
 
+again: 
+
+/*  if (fragmented == true) {
+    printk("fragmented detected.");
+//    spin_lock_irq(q->queue_lock);
+    printk("queue_lock aquired.");
+  }
+*/
 	rq = blk_mq_get_request(q, bio, bio->bi_opf, &data);
 	if (unlikely(!rq)) {
 		__wbt_done(q->rq_wb, wb_acct);
@@ -1705,10 +1719,14 @@ static blk_qc_t blk_mq_make_request(struct request_queue *q, struct bio *bio)
 			bio_wouldblock_error(bio);
 		return BLK_QC_T_NONE;
 	}
+//  if (fragmented == true) 
+//  printk("Breakpoint #1 in blk_mq_make_request");
+
 
 	wbt_track(&rq->issue_stat, wb_acct);
 
-	cookie = request_to_qc_t(data.hctx, rq);
+  if (fragmented != true)
+  	cookie = request_to_qc_t(data.hctx, rq);
 
 	plug = current->plug;
 	if (unlikely(is_flush_fua)) {
@@ -1719,6 +1737,9 @@ static blk_qc_t blk_mq_make_request(struct request_queue *q, struct bio *bio)
 		blk_insert_flush(rq);
 		blk_mq_run_hw_queue(data.hctx, true);
 	} else if (plug && q->nr_hw_queues == 1) {
+    
+//    if (fragmented == true) 
+//    printk("Breakpoint #1 in blk_mq_make_request");
 		struct request *last = NULL;
 
 		blk_mq_put_ctx(data.ctx);
@@ -1746,6 +1767,11 @@ static blk_qc_t blk_mq_make_request(struct request_queue *q, struct bio *bio)
 
 		list_add_tail(&rq->queuelist, &plug->mq_list);
 	} else if (plug && !blk_queue_nomerges(q)) {
+
+
+//    if (fragmented == true) 
+//    printk("Breakpoint #2 in blk_mq_make_request");
+
 		blk_mq_bio_to_request(rq, bio);
 
 		/*
@@ -1770,19 +1796,47 @@ static blk_qc_t blk_mq_make_request(struct request_queue *q, struct bio *bio)
 					&cookie);
 		}
 	} else if (q->nr_hw_queues > 1 && is_sync) {
+
+//    if (fragmented == true) 
+//    printk("Breakpoint #3 in blk_mq_make_request");
+
 		blk_mq_put_ctx(data.ctx);
 		blk_mq_bio_to_request(rq, bio);
 		blk_mq_try_issue_directly(data.hctx, rq, &cookie);
 	} else if (q->elevator) {
+
+//    if (fragmented == true) 
+//    printk("Breakpoint #4 in blk_mq_make_request");
 		blk_mq_put_ctx(data.ctx);
 		blk_mq_bio_to_request(rq, bio);
 		blk_mq_sched_insert_request(rq, false, true, true, true);
 	} else {
+
+//    if (fragmented == true) 
+//    printk("Breakpoint #5 in blk_mq_make_request");
 		blk_mq_put_ctx(data.ctx);
 		blk_mq_bio_to_request(rq, bio);
 		blk_mq_queue_io(data.hctx, data.ctx, rq);
 		blk_mq_run_hw_queue(data.hctx, true);
 	}
+
+  if (bio && bio->fragmented == 100 && bio->frag_list != NULL)
+  {
+    if (fragmented != true) {
+      rq->fragmented = 1;
+      fragmented = true;
+      ori_cookie = cookie;
+    }
+    else {
+      prev_rq->frag_list = rq;
+      rq->fragmented = 2;
+    }
+    prev_rq = rq;
+    bio = bio->frag_list;
+    goto again;
+  }
+  if (fragmented == true)
+    cookie = ori_cookie;
 
 	return cookie;
 }

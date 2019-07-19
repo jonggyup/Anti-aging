@@ -104,8 +104,8 @@ void __blk_complete_request(struct request *req)
 
 	BUG_ON(!q->softirq_done_fn);
 
-  if (req->fragmented == 1 || req->fragmented == 2)
-    printk("Jonggyu: in __blk_complete_request");
+//  if (req->fragmented == 1 || req->fragmented == 2)
+//    printk("Jonggyu: in __blk_complete_request");
 
 	local_irq_save(flags);
 	cpu = smp_processor_id();
@@ -162,14 +162,14 @@ do_local:
 void blk_complete_request(struct request *req)
 {
   /* Added by Jonggyu */
-  if (req->frag_num != 0)
-    printk("Jonggyu: in blk_complete_request, req addr = %lu", req);
+//  if (req->frag_num != 0)
+//    printk("Jonggyu: in blk_complete_request, req addr = %lu", req);
 	if (unlikely(blk_should_fake_timeout(req->q)))
 		return;
 	if (!blk_mark_rq_complete(req))
 		__blk_complete_request(req);
-  if (req->frag_num != 0)
-    printk("Jonggyu: in blk_complete_request, finished");
+//  if (req->frag_num != 0)
+//    printk("Jonggyu: in blk_complete_request, finished");
 
 
 }

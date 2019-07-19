@@ -641,11 +641,8 @@ static bool scsi_end_request(struct request *req, blk_status_t error,
 
 	if (blk_update_request(req, error, bytes))
 		return true;
-  if (req->fragmented == 1 || req->fragmented == 2)
-  {
-    printk("Something happened in scsi_end_request");
-  }
-	/* Bidi request must be completed as a whole */
+
+  /* Bidi request must be completed as a whole */
 	if (unlikely(bidi_bytes) &&
 	    blk_update_request(req->next_rq, error, bidi_bytes))
 		return true;
@@ -1364,13 +1361,13 @@ static int scsi_prep_fn(struct request_queue *q, struct request *req)
 	int ret;
   
   /* Added by Jonggyu */
-  if (req->frag_num != 0)
-    printk("Jonggyu: Breakpoint #1 in scsi_prep_fn");
+//  if (req->frag_num != 0)
+//    printk("Jonggyu: Breakpoint #1 in scsi_prep_fn");
   //
 	ret = scsi_prep_state_check(sdev, req);
   /* Added by Jonggyu */
-  if (req->frag_num != 0)
-    printk("Jonggyu: Breakpoint #2 in scsi_prep_fn");
+//  if (req->frag_num != 0)
+//    printk("Jonggyu: Breakpoint #2 in scsi_prep_fn");
   //
 	if (ret != BLKPREP_OK)
 		goto out;
@@ -1386,8 +1383,8 @@ static int scsi_prep_fn(struct request_queue *q, struct request *req)
 		req->special = cmd;
 	}
   /* Added by Jonggyu */
-  if (req->frag_num != 0)
-    printk("Jonggyu: Breakpoint #3 in scsi_prep_fn");
+//  if (req->frag_num != 0)
+//    printk("Jonggyu: Breakpoint #3 in scsi_prep_fn");
   //
 
 	cmd->tag = req->tag;
@@ -1396,8 +1393,8 @@ static int scsi_prep_fn(struct request_queue *q, struct request *req)
 
 	ret = scsi_setup_cmnd(sdev, req);
   /* Added by Jonggyu */
-  if (req->frag_num != 0)
-    printk("Jonggyu: Breakpoint #4 in scsi_prep_fn");
+//  if (req->frag_num != 0)
+//    printk("Jonggyu: Breakpoint #4 in scsi_prep_fn");
   //
 out:
 	return scsi_prep_return(q, req, ret);
@@ -1743,8 +1740,8 @@ static int scsi_dispatch_cmd(struct scsi_cmnd *cmd)
  done:
 	cmd->scsi_done(cmd);
 
-  if(cmd->request->frag_num != 0)
-    printk("Jonggyu: Fragmented I/O (addr = %lu) is finished in goto done", cmd->request);
+//  if(cmd->request->frag_num != 0)
+//    printk("Jonggyu: Fragmented I/O (addr = %lu) is finished in goto done", cmd->request);
 	return 0;
 }
 
@@ -1804,10 +1801,9 @@ static void scsi_request_fn(struct request_queue *q)
     ori_req = req;
 
 again:    
-    if (!req) {
-//      printk ("!req is detected in scsi_request_fn");
+    if (!req) 
       break;
-    }
+
       if (unlikely(!scsi_device_online(sdev))) {
         sdev_printk(KERN_ERR, sdev,
             "rejecting I/O to offline device\n");
@@ -1817,9 +1813,9 @@ again:
 
 
       if (!scsi_dev_queue_ready(q, sdev)) {
-        if (req->fragmented == 1 || req->fragmented ==2 ) {
+/*        if (req->fragmented == 1 || req->fragmented ==2 ) {
          printk ("Jonggyu: Breakpoint #1 in scsi_request_fn");
-        }
+        }*/
         break;
       }
 
@@ -1827,9 +1823,9 @@ again:
        * Remove the request from the request list.
        */
       if (!(blk_queue_tagged(q) && !blk_queue_start_tag(q, req))) {
-        if (req->fragmented == 1 || req->fragmented ==2 ) {
-         printk ("Jonggyu: Breakpoint #1 in scsi_request_fn");
-        }
+/*        if (req->fragmented == 1 || req->fragmented ==2 ) {
+         printk ("Jonggyu: Breakpoint #2 in scsi_request_fn");
+        }*/
         blk_start_request(req);
 
       }
@@ -1895,14 +1891,14 @@ again:
        * Added by Jonggyu
        */
 
-      if(req != NULL && (req->fragmented == 1 || req->fragmented == 2))
+/*      if(req->frag_list != NULL && (req->fragmented == 1 || req->fragmented == 2))
       {
         printk ("frag req is detected, req = %lu", req);
-//        req = req->frag_list;
-//        goto again;
+        req = req->frag_list;
+        goto again;
       }
       req = ori_req;
-
+*/
   } 
 	return;
 
@@ -3129,7 +3125,7 @@ int scsi_internal_device_block_nowait(struct scsi_device *sdev)
 		blk_mq_quiesce_queue_nowait(q);
 	} else {
 		spin_lock_irqsave(q->queue_lock, flags);
-    printk("Jonggyu: calling blk_stop_queue in scsi_internal_device_block_nowait");
+//    printk("Jonggyu: calling blk_stop_queue in scsi_internal_device_block_nowait");
 		blk_stop_queue(q);
 		spin_unlock_irqrestore(q->queue_lock, flags);
 	}

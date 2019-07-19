@@ -395,11 +395,8 @@ void elv_dispatch_sort(struct request_queue *q, struct request *rq)
 {
 	sector_t boundary;
 	struct list_head *entry;
-  struct request *iter_rq;
-  int i = 0;
 
-again:
-	
+
   if (q->last_merge == rq)
 		q->last_merge = NULL;
   
@@ -419,7 +416,7 @@ again:
     }
   }
   */
-
+again: 
 	boundary = q->end_sector;
 	list_for_each_prev(entry, &q->queue_head) {
     struct request *pos = list_entry_rq(entry); //
@@ -465,12 +462,12 @@ again:
   else*/
 //  if (rq->fragmented != 2)
     list_add(&rq->queuelist, entry);
-    if (rq->frag_list !=NULL && (rq->fragmented ==1 || rq->fragmented ==2))
+/*    if (rq->frag_list !=NULL && (rq->fragmented ==1 || rq->fragmented ==2))
     {
       rq = rq->frag_list;
       list_del_init(&rq->queuelist);
       goto again;
-    }
+    }*/
     
 }
 EXPORT_SYMBOL(elv_dispatch_sort);
@@ -696,7 +693,6 @@ void elv_drain_elevator(struct request_queue *q)
 
 void __elv_add_request(struct request_queue *q, struct request *rq, int where)
 {
-  struct request *iter_rq;
 
 	trace_block_rq_insert(q, rq);
 
@@ -708,10 +704,6 @@ void __elv_add_request(struct request_queue *q, struct request *rq, int where)
 	if (rq->rq_flags & RQF_SOFTBARRIER) {
 		/* barriers are scheduling boundary, update end_sector */
 		if (!blk_rq_is_passthrough(rq)) {
-
-      if (rq->frag_num != 0)
-        printk("Jonggyu:, blk_rq_is_passthrough INNN");
-
 			q->end_sector = rq_end_sector(rq);
 			q->boundary_rq = rq;
 		}
@@ -742,15 +734,15 @@ void __elv_add_request(struct request_queue *q, struct request *rq, int where)
 		 *   processing.
 		 */
 
-     if (rq->frag_num != 0)
-        printk("Jonggyu: In INSERT_BACK IN __elv_add_request");
+//     if (rq->frag_num != 0)
+//        printk("Jonggyu: In INSERT_BACK IN __elv_add_request");
 
 		__blk_run_queue(q);
 		break;
 
 	case ELEVATOR_INSERT_SORT_MERGE:
-      if (rq->frag_num != 0)
-        printk("Jonggyu: In SOFT_MERGE IN __elv_add_request");
+//      if (rq->frag_num != 0)
+//        printk("Jonggyu: In SOFT_MERGE IN __elv_add_request");
 
 		/*
 		 * If we succeed in merging this request with one in the
@@ -761,21 +753,19 @@ void __elv_add_request(struct request_queue *q, struct request *rq, int where)
 			break;
 		/* fall through */
 	case ELEVATOR_INSERT_SORT:
-    if (rq->frag_num != 0)
-       printk("Jonggyu: In ELEVATOR_INSERT_SORT IN __elv_add_request");
+//    if (rq->frag_num != 0)
+//       printk("Jonggyu: In ELEVATOR_INSERT_SORT IN __elv_add_request");
     BUG_ON(blk_rq_is_passthrough(rq));
     rq->rq_flags |= RQF_SORTED;
     q->nr_sorted++;
 
     if (rq_mergeable(rq)) {
       elv_rqhash_add(q, rq);
-      if (rq->frag_num != 0)
-        printk("Jonggyu: in __elv_add_request, request is mergable");
       if (!q->last_merge)
         q->last_merge = rq;
     }
-  
-  		q->elevator->type->ops.sq.elevator_add_req_fn(q, rq);
+//    if (rq->fragmented != 2)
+    	q->elevator->type->ops.sq.elevator_add_req_fn(q, rq);
 
 /*    if (rq->fragmented == 1)
     {
