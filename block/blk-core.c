@@ -131,6 +131,8 @@ void blk_rq_init(struct request_queue *q, struct request *rq)
    */
   rq->fragmented = 0;
   rq->frag_list = NULL;
+  
+  //end
 }
 EXPORT_SYMBOL(blk_rq_init);
 
